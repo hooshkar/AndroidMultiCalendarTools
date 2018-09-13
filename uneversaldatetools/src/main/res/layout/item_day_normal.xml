@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/day_box_size"
+    android:layout_height="@dimen/day_box_size"
+    android:orientation="vertical"
+    android:layout_gravity="start|top">
+
+    <FrameLayout
+        android:layout_gravity="start|top"
+        android:layout_width="@dimen/day_box_size"
+        android:layout_height="@dimen/day_box_size">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@color/dark_gray"/>
+    </FrameLayout>
+
+
+</FrameLayout>
