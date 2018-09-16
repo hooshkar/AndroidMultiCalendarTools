@@ -233,18 +233,31 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
     }
 
     public interface OnDateChangedListener {
-        void onDateChange(int unixTime);
+        void onDateChange(@Nullable DateSystem dateSystem, @Nullable long unixTime);
     }
 
     /**
-     * @return unix time
+     * @return selected date in selected calender
+     * or null if selected day is 31 but this month have no 31
+     * you can show message like "plz select day"
      */
+    @Nullable
     public DateSystem getSelectedDate() {
-        return mDateSystem;
+        if (LoadMonths(mDateSystem).get(mDateSystem.getMonth() - 1).getDaysCount() >= mDateSystem.getDay())
+            return mDateSystem;
+        else return null;
     }
 
-    public Long getSelectedUnixTime(){
-        return mDateSystem.getUnixTime();
+    /**
+     * @return unix time (seconds from 1970/1/1 in UTC + 00:00)
+     * or null if selected day is 31 but this month have no 31
+     * you can show message like "plz select day"
+     */
+    @Nullable
+    public Long getSelectedUnixTime() {
+        if (LoadMonths(mDateSystem).get(mDateSystem.getMonth() - 1).getDaysCount() >= mDateSystem.getDay())
+            return mDateSystem.getUnixTime();
+        else return null;
     }
 
     private void SetupDayOfWeek() {
@@ -318,6 +331,10 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
             ((CalenderViewFragment) mViewPagerAdapter.getItem(mDateSystem.getMonth())).Render();
         } catch (IndexOutOfBoundsException e) {
             //whe we are in last pos (have no next pos)
+        }
+
+        if (listener != null) {
+            listener.onDateChange(mDateSystem, mDateSystem.getUnixTime());
         }
     }
 

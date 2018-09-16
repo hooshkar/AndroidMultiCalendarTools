@@ -28,14 +28,19 @@ public class MainActivity extends AppCompatActivity {
         Button getTime = findViewById(R.id.btn_get_time);
         TextView timeView = findViewById(R.id.text_time_show);
 
-        a.ShowDatePicker(Calendar.Hijri);
-        a.setOnDateSelected(unixTime -> {
+        a.ShowDatePicker(Calendar.Gregorian);
+        a.setOnDateSelected((dateSystem, unixTime) -> {
             Toast.makeText(this, String.valueOf(unixTime), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, String.valueOf(dateSystem), Toast.LENGTH_SHORT).show();
         });
 
         getTime.setOnClickListener(v -> {
-            timeView.setText("unix time is: " + a.getSelectedUnixTime());
-            timeView.append("\ndate is: " + a.getSelectedDate());
+            if (a.getSelectedUnixTime() == null) {
+                Toast.makeText(this, "plz select day", Toast.LENGTH_SHORT).show();
+            } else {
+                timeView.setText("unix time is: " + a.getSelectedUnixTime());
+                timeView.append("\ndate is: " + a.getSelectedDate());
+            }
         });
 
 
