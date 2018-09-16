@@ -77,16 +77,16 @@ public class DateSystem implements IDate, Comparable<IDate> {
         return Date;
     }
 
-    public JalaliDateTime getHDateTime() {
-        return Date_SD.getHDateTime();
+    public JalaliDateTime getJalaliDateTime() {
+        return Date_SD.getJalaliDateTime();
     }
 
-    public GregorianDateTime getMDateTime() {
-        return Date_SD.getMDateTime();
+    public GregorianDateTime getGregorianDateTime() {
+        return Date_SD.getGregorianDateTime();
     }
 
-    public HijriDateTime getGDateTime() {
-        return Date_SD.getGDateTime();
+    public HijriDateTime getHijriDateTime() {
+        return Date_SD.getHijriDateTime();
     }
 
     public IDate getDate_SD() {
@@ -260,7 +260,7 @@ public class DateSystem implements IDate, Comparable<IDate> {
     @Override
     public long getUnixTime() {
 
-        GregorianDateTime g = getMDateTime();
+        GregorianDateTime g = getGregorianDateTime();
         long from = DateConverter.GregorianToDays(1970, 1, 1);
         long d = g.getDays() - from;
         long s = d * 86400;

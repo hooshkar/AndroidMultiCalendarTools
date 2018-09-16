@@ -11,7 +11,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     private List<Fragment> _mFragmentList = new ArrayList<>();
 
-    public ViewPagerAdapter(FragmentManager fm) {
+    ViewPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
@@ -26,10 +26,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     }
 
 
-    public void AddFragmentToEnd(Fragment fragment) {
+    void AddFragmentToEnd(Fragment fragment) {
         _mFragmentList.add(fragment);
-    }
-    public void AddFragmentToStart(Fragment fragment){
-        _mFragmentList.add(0,fragment);
     }
 }

@@ -161,15 +161,15 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
         return new JalaliDateTime(getDays() + days).getDate();
     }
 
-    public JalaliDateTime getHDateTime() {
+    public JalaliDateTime getJalaliDateTime() {
         return this;
     }
 
-    public GregorianDateTime getMDateTime() {
+    public GregorianDateTime getGregorianDateTime() {
         return new GregorianDateTime(getDate());
     }
 
-    public HijriDateTime getGDateTime() {
+    public HijriDateTime getHijriDateTime() {
         return new HijriDateTime(getDate());
     }
 

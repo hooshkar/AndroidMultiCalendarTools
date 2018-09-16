@@ -184,17 +184,17 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
     }
 
 
-    public JalaliDateTime getHDateTime() {
+    public JalaliDateTime getJalaliDateTime() {
         return new JalaliDateTime(getDate());
     }
 
 
-    public GregorianDateTime getMDateTime() {
+    public GregorianDateTime getGregorianDateTime() {
         return new GregorianDateTime(getDate());
     }
 
 
-    public HijriDateTime getGDateTime() {
+    public HijriDateTime getHijriDateTime() {
         return this;
     }
 

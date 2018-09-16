@@ -155,15 +155,15 @@ public class GregorianDateTime implements IDate, Comparable<GregorianDateTime> {
         return new GregorianDateTime(getDays() + days).getDate();
     }
 
-    public JalaliDateTime getHDateTime() {
+    public JalaliDateTime getJalaliDateTime() {
         return new JalaliDateTime(getDate());
     }
 
-    public GregorianDateTime getMDateTime() {
+    public GregorianDateTime getGregorianDateTime() {
         return this;
     }
 
-    public HijriDateTime getGDateTime() {
+    public HijriDateTime getHijriDateTime() {
         return new HijriDateTime(getDate());
     }
 

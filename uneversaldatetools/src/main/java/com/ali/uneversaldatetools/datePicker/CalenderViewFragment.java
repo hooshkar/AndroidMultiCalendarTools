@@ -38,7 +38,7 @@ public class CalenderViewFragment extends Fragment {
         this.mMonth = month;
         this.mInterface = mInterface;
         mIndex = index;
-        Log.d("frag", "const(" + String.valueOf(index) + ")");
+        Log.d("swipe", "const(" + String.valueOf(index) + ")");
     }
 
     @SuppressLint("ResourceAsColor")
@@ -47,7 +47,7 @@ public class CalenderViewFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         cView = inflater.inflate(R.layout.item_month_view, null);
-        Log.d("frag", "createView(" + String.valueOf(mIndex) + ")");
+        Log.d("swipe", "createView(" + String.valueOf(mIndex) + ")");
         Render();
         return cView;
     }
@@ -55,7 +55,7 @@ public class CalenderViewFragment extends Fragment {
     public void Render() {
         if (cView == null)
             throw new RuntimeException("Render called before onCreateView in index: " + mIndex);
-        Log.d("frag", "render(" + String.valueOf(mIndex) + ")");
+        Log.d("swipe", "render(" + String.valueOf(mIndex) + ")");
         GridLayout gridLayout = cView.findViewById(R.id.grid_layout_days);
         gridLayout.removeAllViews();
         DaysViewGenerator daysViewGenerator = new DaysViewGenerator(getActivity());

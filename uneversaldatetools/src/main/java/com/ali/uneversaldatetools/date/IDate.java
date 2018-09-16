@@ -14,9 +14,9 @@ public interface IDate {
     int getDays();
     int getDaysOfMonth();
     Date getDate();
-    JalaliDateTime getHDateTime();
-    GregorianDateTime getMDateTime();
-    HijriDateTime getGDateTime();
+    JalaliDateTime getJalaliDateTime();
+    GregorianDateTime getGregorianDateTime();
+    HijriDateTime getHijriDateTime();
     Date getFirstDayOfYear();
     Date getLastDayOfYear ();
     Date getFirstDayOfMonth ();

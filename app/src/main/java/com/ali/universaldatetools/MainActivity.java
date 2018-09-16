@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         Button getTime = findViewById(R.id.btn_get_time);
         TextView timeView = findViewById(R.id.text_time_show);
 
-        a.ShowDatePicker(Calendar.Gregorian);
+        a.ShowDatePicker(Calendar.Jalali);
         a.setOnDateSelected((dateSystem, unixTime) -> {
             Toast.makeText(this, String.valueOf(unixTime), Toast.LENGTH_SHORT).show();
             Toast.makeText(this, String.valueOf(dateSystem), Toast.LENGTH_SHORT).show();

@@ -6,12 +6,10 @@ import com.ali.uneversaldatetools.date.DateSystem;
 import com.ali.uneversaldatetools.date.HijriDateTime;
 import com.ali.uneversaldatetools.date.JalaliDateTime;
 import com.ali.uneversaldatetools.date.GregorianDateTime;
-import com.ali.uneversaldatetools.model.Month;
 import com.ali.uneversaldatetools.tools.DateTools;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -34,8 +32,8 @@ public class ExampleUnitTest {
         Date date = DateTools.getCurrentDate();
         date.setYear(date.getYear());
         GregorianDateTime gregorianDateTime = new GregorianDateTime(date);
-        HijriDateTime hijriDateTime = gregorianDateTime.getGDateTime();
-        JalaliDateTime jalaliDateTime = gregorianDateTime.getHDateTime();
+        HijriDateTime hijriDateTime = gregorianDateTime.getHijriDateTime();
+        JalaliDateTime jalaliDateTime = gregorianDateTime.getJalaliDateTime();
 
         Log("------date-------");
         Log("year: " + date.getYear());

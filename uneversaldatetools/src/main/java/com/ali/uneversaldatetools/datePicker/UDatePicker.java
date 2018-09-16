@@ -27,18 +27,24 @@ import com.ali.uneversaldatetools.tools.ExpandAndCollapseAnimation;
 import com.ali.uneversaldatetools.tools.StringGenerator;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+
+import static android.support.v4.view.ViewPager.SCROLL_STATE_IDLE;
 
 /**
  * Created by ali on 9/5/18.
  */
 
-public class UDatePicker extends FrameLayout implements CalenderViewFragment.CalenderFragmentInterface {
+public class UDatePicker extends FrameLayout implements CalenderViewFragment.CalenderFragmentInterface, ViewPager.OnPageChangeListener {
 
     private OnDateChangedListener listener;
     private Activity mActivity;
     private ViewPagerAdapter mViewPagerAdapter;
     private ViewPager mViewPager;
+    private TextView topbarMonthText;
+    private int tempPos;
 
     private DateSystem mDateSystem; // current selected date
 
@@ -60,8 +66,6 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
     private void Init(Context context) {
 
         this.mActivity = (Activity) context;
-
-        this.removeAllViews();
 
         View dayPickerView = mActivity.getLayoutInflater().inflate(R.layout.u_date_picker_days_month, null);
         addView(dayPickerView);
@@ -92,43 +96,10 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
         SetupDayOfWeek();
         SetupArrowKeys();
 
-        TextView topbarMonthText = findViewById(R.id.text_top_bar_month);
+        topbarMonthText = findViewById(R.id.text_top_bar_month);
         mViewPager = findViewById(R.id.pager_swipe_layout);
 
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageSelected(int position) {
-
-                Log.d("frag", "select(" + String.valueOf(position) + ")");
-
-                topbarMonthText.setText(StringGenerator.Month(
-                        mActivity.getResources(),
-                        position + 1,
-                        mDateSystem.getCalendar()));
-
-
-                mDateSystem = new DateSystem(
-                        mDateSystem.getYear(),
-                        position + 1,
-                        mDateSystem.getDay(),
-                        mDateSystem.getCalendar());
-            }
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-//        postDelayed(() -> {
-//
-//        }, 20);//go to current month with anim
+        mViewPager.addOnPageChangeListener(this);
 
         topbarMonthText.setText(StringGenerator.Month(
                 getResources(),
@@ -136,16 +107,11 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
                 mDateSystem.getCalendar())
         );
 
-//        todo : do this on view pager is close to end
-//        postDelayed(() -> {
-//            for (Month month : months) {
-//                mViewPagerAdapter.AddFragmentToEnd(new CalenderViewFragment(month, months.indexOf(month), this));
-//            }
-//            mViewPagerAdapter.notifyDataSetChanged();
-//        }, 5000);
-
         mViewPagerAdapter = new ViewPagerAdapter(((AppCompatActivity) mActivity).getSupportFragmentManager());
         for (Month month : months) {
+            mViewPagerAdapter.AddFragmentToEnd(new CalenderViewFragment(month, months.indexOf(month), this));
+        }
+        for (Month month : months.subList(0, 5)) {
             mViewPagerAdapter.AddFragmentToEnd(new CalenderViewFragment(month, months.indexOf(month), this));
         }
 
@@ -351,5 +317,55 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
     @Override
     public int currentDayProvider() {
         return new DateSystem(DateTools.getCurrentDate(), mDateSystem.getCalendar()).getDay();
+    }
+
+
+    //view pager listener
+    @Override
+    public void onPageSelected(int position) {
+        Log.d("swipe", "select(" + String.valueOf(position) + ")");
+
+        topbarMonthText.setText(StringGenerator.Month(
+                mActivity.getResources(),
+                getMonth(),
+                mDateSystem.getCalendar()));
+
+
+        mDateSystem = new DateSystem(
+                mDateSystem.getYear(),
+                position + 1,
+                mDateSystem.getDay(),
+                mDateSystem.getCalendar());
+
+
+        tempPos = position;
+    }
+
+    @Override // ignored
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    }
+
+    @Override // ignored
+    public void onPageScrollStateChanged(int state) {
+
+        if (state == SCROLL_STATE_IDLE) {
+            //on animation stop
+            //add on swipe
+            if (tempPos > mViewPagerAdapter.getCount() - 3) { //yeki monde be akhar
+                mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 12, false);
+            } else if (tempPos < 2) { //yeki monde be aval
+                mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 12, false);
+            }
+        }
+    }
+
+    private int getMonth() {
+        int current = mViewPager.getCurrentItem() + 1;
+        if (current > 12) {
+            current -= 12;
+        }
+        if (current < 0)
+            throw new RuntimeException("current is less then 0: " + current);
+        return current;
     }
 }
