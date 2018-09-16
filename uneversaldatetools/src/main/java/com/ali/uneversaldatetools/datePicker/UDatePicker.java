@@ -239,7 +239,11 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
     /**
      * @return unix time
      */
-    public Long getSelectedDate() {
+    public DateSystem getSelectedDate() {
+        return mDateSystem;
+    }
+
+    public Long getSelectedUnixTime(){
         return mDateSystem.getUnixTime();
     }
 

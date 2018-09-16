@@ -21,4 +21,17 @@
         android:text="lang"
         android:layout_gravity="center_horizontal"/>
 
+    <Button
+        android:id="@+id/btn_get_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="getTime"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:id="@+id/text_time_show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"/>
+
 </LinearLayout>

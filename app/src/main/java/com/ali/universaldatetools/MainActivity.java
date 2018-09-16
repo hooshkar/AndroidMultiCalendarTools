@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ali.uneversaldatetools.date.Calendar;
 import com.ali.uneversaldatetools.date.DateSystem;
 import com.ali.uneversaldatetools.datePicker.UDatePicker;
 
+import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,12 +24,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         UDatePicker a = findViewById(R.id.date_picker);
-        a.ShowDatePicker(Calendar.Jalali);
+        Button lang = findViewById(R.id.btn_lang);
+        Button getTime = findViewById(R.id.btn_get_time);
+        TextView timeView = findViewById(R.id.text_time_show);
+
+        a.ShowDatePicker(Calendar.Hijri);
         a.setOnDateSelected(unixTime -> {
             Toast.makeText(this, String.valueOf(unixTime), Toast.LENGTH_SHORT).show();
         });
 
-        Button lang = findViewById(R.id.btn_lang);
+        getTime.setOnClickListener(v -> {
+            timeView.setText("unix time is: " + a.getSelectedUnixTime());
+            timeView.append("\ndate is: " + a.getSelectedDate());
+        });
+
+
         lang.setOnClickListener(v -> {
             if (getString(R.string.LangId).equals("en")) {
                 setLocale("fa");

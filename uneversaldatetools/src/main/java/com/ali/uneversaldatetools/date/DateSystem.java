@@ -259,7 +259,12 @@ public class DateSystem implements IDate, Comparable<IDate> {
 
     @Override
     public long getUnixTime() {
-        return Date_SD.getUnixTime();
+
+        GregorianDateTime g = getMDateTime();
+        long from = DateConverter.GregorianToDays(1970, 1, 1);
+        long d = g.getDays() - from;
+        long s = d * 86400;
+        return s;
     }
 
 }
