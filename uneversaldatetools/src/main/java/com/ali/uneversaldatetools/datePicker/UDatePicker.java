@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
@@ -99,6 +100,8 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
             @Override
             public void onPageSelected(int position) {
 
+                Log.d("frag", "select(" + String.valueOf(position) + ")");
+
                 topbarMonthText.setText(StringGenerator.Month(
                         mActivity.getResources(),
                         position + 1,
@@ -123,9 +126,9 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
             }
         });
 
-        postDelayed(() -> {
-            mViewPager.setCurrentItem(mDateSystem.getMonth() - 1);
-        }, 20);//go to current month with anim
+//        postDelayed(() -> {
+//
+//        }, 20);//go to current month with anim
 
         topbarMonthText.setText(StringGenerator.Month(
                 getResources(),
@@ -142,13 +145,12 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
 //        }, 5000);
 
         mViewPagerAdapter = new ViewPagerAdapter(((AppCompatActivity) mActivity).getSupportFragmentManager());
-
         for (Month month : months) {
             mViewPagerAdapter.AddFragmentToEnd(new CalenderViewFragment(month, months.indexOf(month), this));
         }
 
-
         mViewPager.setAdapter(mViewPagerAdapter);
+        mViewPager.setCurrentItem(mDateSystem.getMonth() - 1, false);
     }
 
     private void SetupYearPicker(int selectedYear) {
@@ -171,7 +173,6 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
 
         topbarMonth.setAlpha(1);
         topbarYear.setAlpha((float) 0.6);
-        ExpandAndCollapseAnimation.Collapse(topbarMonthTitle);
         topbarMonth.setOnClickListener(v -> {
             if (yearPickerView.getVisibility() == View.GONE) return;
 
@@ -209,9 +210,21 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
             topbarYear.setAlpha((float) 0.6);
             postDelayed(() -> yearPickerView.setVisibility(GONE), 300);
             yearPickerView.animate().alpha(0).setDuration(300).start();
+            ExpandAndCollapseAnimation.Collapse(topbarMonthTitle);
+            ExpandAndCollapseAnimation.Expand(topbarYearTitle);
 
-            Init(mActivity);
-            ShowDatePicker(new DateSystem(position, mDateSystem.getMonth(), mDateSystem.getDay(), mDateSystem.getCalendar()));
+            //refresh viewPager
+            mDateSystem = new DateSystem(
+                    position,
+                    mDateSystem.getMonth(),
+                    mDateSystem.getDay(),
+                    mDateSystem.getCalendar());
+
+            List<Month> months = LoadMonths(mDateSystem);
+            for (Month month : months) {
+                ((CalenderViewFragment) mViewPagerAdapter.getItem(months.indexOf(month))).setMonth(month);
+            }
+            mViewPagerAdapter.notifyDataSetChanged();
         });
     }
 

@@ -2,7 +2,7 @@
 <resources>
     <string name="LangId">fa</string>
 
-    <string name="month">ماه</string>
+    <string name="mMonth">ماه</string>
     <string name="year">سال</string>
 
     <string-array name="jalali_months">
