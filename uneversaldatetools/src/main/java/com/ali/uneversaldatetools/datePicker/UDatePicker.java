@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ali.uneversaldatetools.R;
 import com.ali.uneversaldatetools.date.Calendar;
@@ -27,8 +28,6 @@ import com.ali.uneversaldatetools.tools.ExpandAndCollapseAnimation;
 import com.ali.uneversaldatetools.tools.StringGenerator;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import static android.support.v4.view.ViewPager.SCROLL_STATE_IDLE;
@@ -76,7 +75,6 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
     }
 
     public void ShowDatePicker(@NonNull DateSystem defaultDate) {
-        //change index from 1 to 0
         mDateSystem = defaultDate;
         SetupDayPicker(LoadMonths(mDateSystem));
         SetupYearPicker(mDateSystem.getYear());
@@ -89,8 +87,8 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
 
     @SuppressLint("ClickableViewAccessibility")
     private void SetupDayPicker(ArrayList<Month> months) {
-        this.getLayoutParams().height = Convert.DpToPixel(350);//do not change this
-        this.getLayoutParams().width = Convert.DpToPixel(300); //do not change this
+        this.getLayoutParams().height = Convert.DpToPixel(350);
+        this.getLayoutParams().width = Convert.DpToPixel(300);
         requestLayout();
 
         SetupDayOfWeek();
@@ -109,10 +107,10 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
 
         mViewPagerAdapter = new ViewPagerAdapter(((AppCompatActivity) mActivity).getSupportFragmentManager());
         for (Month month : months) {
-            mViewPagerAdapter.AddFragmentToEnd(new CalenderViewFragment(month, months.indexOf(month), this));
+            mViewPagerAdapter.AddFragment(new CalenderViewFragment(month, months.indexOf(month), this));
         }
         for (Month month : months.subList(0, 5)) {
-            mViewPagerAdapter.AddFragmentToEnd(new CalenderViewFragment(month, months.indexOf(month), this));
+            mViewPagerAdapter.AddFragment(new CalenderViewFragment(month, months.indexOf(month), this));
         }
 
         mViewPager.setAdapter(mViewPagerAdapter);
@@ -349,6 +347,7 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
     public void onPageScrollStateChanged(int state) {
 
         if (state == SCROLL_STATE_IDLE) {
+            Toast.makeText(mActivity, "SCROLL_STATE_IDLE", Toast.LENGTH_SHORT).show();
             //on animation stop
             //add on swipe
             if (tempPos > mViewPagerAdapter.getCount() - 3) { //yeki monde be akhar

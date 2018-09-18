@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ali.uneversaldatetools.date.Calendar;
 import com.ali.uneversaldatetools.R;
 import com.ali.uneversaldatetools.tools.StringGenerator;
 
@@ -16,19 +15,19 @@ import java.util.List;
  * Created by ali on 9/9/18.
  */
 
-public class DaysViewGenerator {
+class DaysViewGenerator {
 
     private Activity mActivity;
 
-    public DaysViewGenerator(Activity activity) {
+    DaysViewGenerator(Activity activity) {
         mActivity = activity;
     }
 
-    public View getEmptyView() {
+    View getEmptyView() {
         return mActivity.getLayoutInflater().inflate(R.layout.item_day_empty, null);
     }
 
-    public View getNormalView(int num) {
+    View getNormalView(int num) {
         ViewGroup root = (ViewGroup) mActivity.getLayoutInflater().inflate(R.layout.item_day_normal, null);
         TextView day = (TextView) ((ViewGroup) root.getChildAt(0)).getChildAt(0);
         day.setText(StringGenerator.NumberToString(mActivity.getResources(), num));
@@ -36,7 +35,7 @@ public class DaysViewGenerator {
         return root;
     }
 
-    public View getSelectedView(int num) {
+    View getSelectedView(int num) {
 
         ViewGroup root = (ViewGroup) mActivity.getLayoutInflater().inflate(R.layout.item_day_selected, null);
         TextView day = (TextView) ((ViewGroup) root.getChildAt(0)).getChildAt(1);
@@ -45,7 +44,7 @@ public class DaysViewGenerator {
         return root;
     }
 
-    public View getTodayView(int num) {
+    View getTodayView(int num) {
         ViewGroup root = (ViewGroup) mActivity.getLayoutInflater().inflate(R.layout.item_day_today, null);
         TextView day = (TextView) ((ViewGroup) root.getChildAt(0)).getChildAt(1);
         day.setText(StringGenerator.NumberToString(mActivity.getResources(), num));
@@ -53,7 +52,7 @@ public class DaysViewGenerator {
         return root;
     }
 
-    public List<View> getDayOfWeek() {
+    List<View> getDayOfWeek() {
 
         List<View> views = new ArrayList<>();
 
