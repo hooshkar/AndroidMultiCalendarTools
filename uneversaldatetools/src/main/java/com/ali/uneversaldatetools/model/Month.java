@@ -8,40 +8,32 @@ import com.ali.uneversaldatetools.date.DayOfWeek;
 
 public class Month {
 
+    private int pos; // 1 -> 12
     private String name;
     private int daysCount; //28 , 29 , 30 , 31
     private DayOfWeek startAt;
 
-    public Month(String name, int daysCount, DayOfWeek startAt) {
+    public Month(int pos, String name, int daysCount, DayOfWeek startAt) {
+        this.pos = pos;
         this.name = name;
         this.daysCount = daysCount;
         this.startAt = startAt;
+    }
+
+    public int getPos() {
+        return pos;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getDaysCount() {
         return daysCount;
-    }
-
-    public void setDaysCount(int daysCount) {
-        if (daysCount == 28 | daysCount == 29 | daysCount == 30 | daysCount == 31)
-            this.daysCount = daysCount;
-        else
-            throw new IllegalArgumentException("month count is not valid");
     }
 
     public DayOfWeek getStartAt() {
         return startAt;
     }
 
-    public void setStartAt(DayOfWeek startAt) {
-        this.startAt = startAt;
-    }
 }

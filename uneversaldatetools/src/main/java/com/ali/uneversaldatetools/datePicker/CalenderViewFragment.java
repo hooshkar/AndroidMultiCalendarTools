@@ -80,14 +80,14 @@ public class CalenderViewFragment extends Fragment {
         gridLayout.addView(view);
 
         view.setOnClickListener(v -> {
-            mInterface.onDaySelectListener((int) v.getTag());
+            mInterface.onDaySelectListener((int) v.getTag(), mMonth.getPos());
             Render();
         });
     }
 
     public interface CalenderFragmentInterface {
 
-        void onDaySelectListener(int day);
+        void onDaySelectListener(int day, int monthIndex);
 
         int selectedDayProvider();
 

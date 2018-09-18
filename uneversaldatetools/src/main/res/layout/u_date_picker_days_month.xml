@@ -34,7 +34,7 @@
                 android:id="@+id/text_top_bar_month_title"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:text="@string/mMonth"
+                android:text="@string/month"
                 android:textColor="@color/white"
                 android:textSize="10dp"
                 tools:ignore="Suspicious0dp" />
@@ -104,5 +104,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:overScrollMode="never" />
+    <!-- android:overScrollMode="never" -> make fade edge effect disable -->
 
 </LinearLayout>

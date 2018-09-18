@@ -10,10 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ali.uneversaldatetools.date.Calendar;
-import com.ali.uneversaldatetools.date.DateSystem;
 import com.ali.uneversaldatetools.datePicker.UDatePicker;
 
-import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
         a.ShowDatePicker(Calendar.Jalali);
         a.setOnDateSelected((dateSystem, unixTime) -> {
-            Toast.makeText(this, String.valueOf(unixTime), Toast.LENGTH_SHORT).show();
-            Toast.makeText(this, String.valueOf(dateSystem), Toast.LENGTH_SHORT).show();
+            timeView.setText("unix time is: " + unixTime);
+            timeView.append("\ndate is: " + dateSystem);
         });
 
         getTime.setOnClickListener(v -> {

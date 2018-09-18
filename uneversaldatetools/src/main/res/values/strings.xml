@@ -4,7 +4,7 @@
 
     <string name="LangId">en</string>
 
-    <string name="mMonth">mMonth</string>
+    <string name="month">month</string>
     <string name="year">year</string>
 
     <string-array name="jalali_months">

@@ -35,7 +35,12 @@ import static android.support.v4.view.ViewPager.SCROLL_STATE_IDLE;
  * Created by ali on 9/5/18.
  */
 
-public class UDatePicker extends FrameLayout implements CalenderViewFragment.CalenderFragmentInterface, ViewPager.OnPageChangeListener {
+public class UDatePicker
+        extends
+        FrameLayout
+        implements
+        CalenderViewFragment.CalenderFragmentInterface,
+        ViewPager.OnPageChangeListener {
 
     private OnDateChangedListener listener;
     private Activity mActivity;
@@ -206,9 +211,15 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
      */
     @Nullable
     public DateSystem getSelectedDate() {
-        if (LoadMonths(mDateSystem).get(mDateSystem.getMonth() - 1).getDaysCount() >= mDateSystem.getDay())
-            return mDateSystem;
-        else return null;
+        DateSystem dateSystem;
+        if (mDateSystem.getMonth() == 13)
+            dateSystem = new DateSystem(mDateSystem.getYear(), 1, mDateSystem.getDay(), mDateSystem.getCalendar());
+        else
+            dateSystem = mDateSystem;
+
+        if (LoadMonths(dateSystem).get(dateSystem.getMonth() - 1).getDaysCount() >= dateSystem.getDay())
+            return dateSystem;
+        else return null;// when selected day is 31 but month have no 31
     }
 
     /**
@@ -218,9 +229,9 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
      */
     @Nullable
     public Long getSelectedUnixTime() {
-        if (LoadMonths(mDateSystem).get(mDateSystem.getMonth() - 1).getDaysCount() >= mDateSystem.getDay())
-            return mDateSystem.getUnixTime();
-        else return null;
+        DateSystem dateSystem = getSelectedDate();
+        if (dateSystem == null) return null;
+        else return dateSystem.getUnixTime();
     }
 
     private void SetupDayOfWeek() {
@@ -255,6 +266,7 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
             DateSystem dateLoop = new DateSystem(year, i, 1, calendar);// 1 means first day of month
 
             Month month = new Month(
+                    i,
                     StringGenerator.Month(mActivity.getResources(), i, calendar),
                     dateLoop.getDaysOfMonth(),
                     dateLoop.getDayOfWeek()
@@ -275,7 +287,7 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
 
     //fragment interface implement
     @Override
-    public void onDaySelectListener(int day) {
+    public void onDaySelectListener(int day, int monthPos) {
         mDateSystem = new DateSystem(
                 mDateSystem.getYear(),
                 mDateSystem.getMonth(),
@@ -297,7 +309,8 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
         }
 
         if (listener != null) {
-            listener.onDateChange(mDateSystem, mDateSystem.getUnixTime());
+            DateSystem dateSystem = new DateSystem(mDateSystem.getYear(), monthPos, day, mDateSystem.getCalendar());
+            listener.onDateChange(dateSystem, dateSystem.getUnixTime());
         }
     }
 
