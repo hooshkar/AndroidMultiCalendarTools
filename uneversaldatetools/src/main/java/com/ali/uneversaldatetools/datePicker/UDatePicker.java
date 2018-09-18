@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ali.uneversaldatetools.R;
 import com.ali.uneversaldatetools.date.Calendar;
@@ -43,7 +42,6 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
     private ViewPagerAdapter mViewPagerAdapter;
     private ViewPager mViewPager;
     private TextView topbarMonthText;
-    private int tempPos;
 
     private DateSystem mDateSystem; // current selected date
 
@@ -109,9 +107,10 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
         for (Month month : months) {
             mViewPagerAdapter.AddFragment(new CalenderViewFragment(month, months.indexOf(month), this));
         }
-        for (Month month : months.subList(0, 5)) {
-            mViewPagerAdapter.AddFragment(new CalenderViewFragment(month, months.indexOf(month), this));
-        }
+        //for making viewpager swipe circle
+        mViewPagerAdapter.AddFragment(new CalenderViewFragment(months.get(0), months.indexOf(months.get(0)), this));
+        mViewPagerAdapter.AddFragment(new CalenderViewFragment(months.get(1), months.indexOf(months.get(1)), this));
+
 
         mViewPager.setAdapter(mViewPagerAdapter);
         mViewPager.setCurrentItem(mDateSystem.getMonth() - 1, false);
@@ -334,29 +333,24 @@ public class UDatePicker extends FrameLayout implements CalenderViewFragment.Cal
                 position + 1,
                 mDateSystem.getDay(),
                 mDateSystem.getCalendar());
-
-
-        tempPos = position;
     }
 
-    @Override // ignored
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    }
-
-    @Override // ignored
+    @Override
     public void onPageScrollStateChanged(int state) {
 
         if (state == SCROLL_STATE_IDLE) {
-            Toast.makeText(mActivity, "SCROLL_STATE_IDLE", Toast.LENGTH_SHORT).show();
             //on animation stop
-            //add on swipe
-            if (tempPos > mViewPagerAdapter.getCount() - 3) { //yeki monde be akhar
-                mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 12, false);
-            } else if (tempPos < 2) { //yeki monde be aval
-                mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 12, false);
+            if (mViewPager.getCurrentItem() == 13) {
+                mViewPager.setCurrentItem(1, false);
+            } else if (mViewPager.getCurrentItem() == 0) {
+                mViewPager.setCurrentItem(12, false);
             }
         }
     }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {/*ignore*/}
+
 
     private int getMonth() {
         int current = mViewPager.getCurrentItem() + 1;
