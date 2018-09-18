@@ -33,7 +33,7 @@
             <TextView
                 android:id="@+id/text_top_bar_month_title"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:text="@string/month"
                 android:textColor="@color/white"
                 android:textSize="10dp"
@@ -65,10 +65,11 @@
             <TextView
                 android:id="@+id/text_top_bar_year_title"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:text="@string/year"
                 android:textColor="@color/white"
-                android:textSize="10dp" />
+                android:textSize="10dp"
+                tools:ignore="Suspicious0dp" />
 
             <TextView
                 android:id="@+id/text_top_bar_year"

@@ -146,22 +146,20 @@ public class UDatePicker
 
             topbarMonth.setAlpha(1);
             topbarYear.setAlpha((float) 0.6);
-
             postDelayed(() -> yearPickerView.setVisibility(GONE), 300);
             yearPickerView.animate().alpha(0).setDuration(300).start();
-            ExpandAndCollapseAnimation.Collapse(topbarMonthTitle);
-            ExpandAndCollapseAnimation.Expand(topbarYearTitle);
+            ExpandAndCollapseAnimation.Collapse(topbarYearTitle);
+            ExpandAndCollapseAnimation.Expand(topbarMonthTitle);
         });
         topbarYear.setOnClickListener(v -> {
             if (yearPickerView.getVisibility() == VISIBLE) return;
 
             topbarMonth.setAlpha((float) 0.6);
             topbarYear.setAlpha(1);
-
             yearPickerView.setVisibility(VISIBLE);
             yearPickerView.animate().alpha(1).setDuration(300).start();
-            ExpandAndCollapseAnimation.Collapse(topbarYearTitle);
-            ExpandAndCollapseAnimation.Expand(topbarMonthTitle);
+            ExpandAndCollapseAnimation.Collapse(topbarMonthTitle);
+            ExpandAndCollapseAnimation.Expand(topbarYearTitle);
         });
 
 
@@ -178,8 +176,8 @@ public class UDatePicker
             topbarYear.setAlpha((float) 0.6);
             postDelayed(() -> yearPickerView.setVisibility(GONE), 300);
             yearPickerView.animate().alpha(0).setDuration(300).start();
-            ExpandAndCollapseAnimation.Collapse(topbarMonthTitle);
-            ExpandAndCollapseAnimation.Expand(topbarYearTitle);
+            ExpandAndCollapseAnimation.Collapse(topbarYearTitle);
+            ExpandAndCollapseAnimation.Expand(topbarMonthTitle);
 
             //refresh viewPager
             mDateSystem = new DateSystem(
