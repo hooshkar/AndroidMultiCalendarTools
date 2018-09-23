@@ -1,27 +1,13 @@
 # Android multi calender tools library for android
-android date tools and <b>date picker</b> for tree calenders "Jalali" and "Hijri" and "Gregorian"
+android date tools and <b>date picker</b> for tree calendar systems <b>Jalali , Hijri , Gregorian</b>
 
-# screen shots
+# Screen shots
 todo put screen shots here
 
-# installation
-Add it in your root build.gradle at the end of repositories:
-~~~Groovy
-allprojects {
-	repositories {
-		...
-		maven { url 'https://jitpack.io' }
-	}
-}
-~~~
-Add the dependency
-~~~Groovy
-dependencies {
-	   implementation 'TODO'
-}
-~~~
+# Add to your project
+copy [this](https://github.com/hooshkar/AndroidMultiCalenderTools/releases/download/1.0.0/universalDateTools.jar) to "yourProject/app/libs" <br> [have problem?](https://github.com/hooshkar/AndroidMultiCalenderTools/wiki/install)
 
-# how to use
+# How to use
 <b>date converter:</b> more
 [here](https://github.com/hooshkar/AndroidMultiCalenderTools/wiki/Convert).
 ~~~java
@@ -60,16 +46,16 @@ uDatePicker.getSelectedDate();//as a DateSystem object
 
 ~~~
 
-# supported language:
+# Supported language:
 1.persian <br>
 2.english <br>
 and its easy to add new language see
 [here](https://github.com/hooshkar/AndroidMultiCalenderTools/wiki/language).
 
-# todo
-1. <s>fix year picker</s>
-2. add dialog mode
-3. make jar
+# Todo
+- [x] fix year picker
+- [ ] add dialog mode
+- [x] make jar
 
 # LICENCE
 under [MIT](https://github.com/hooshkar/AndroidMultiCalenderTools/blob/master/LICENSE) licence
