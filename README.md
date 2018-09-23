@@ -5,7 +5,7 @@ android date tools and <b>date picker</b> for tree calendar systems <b>Jalali , 
 todo put screen shots here
 
 # Add to your project
-copy [this](https://github.com/hooshkar/AndroidMultiCalenderTools/releases/download/1.0.0/universalDateTools.jar) to "yourProject/app/libs" <br> [have problem?](https://github.com/hooshkar/AndroidMultiCalenderTools/wiki/install)
+copy [this](https://github.com/hooshkar/AndroidMultiCalenderTools/releases/download/1.0.0/uneversaldatetools.aar) to "yourProject/app/libs" <br> [have problem?](https://github.com/hooshkar/AndroidMultiCalenderTools/wiki/install)
 
 # How to use
 <b>date converter:</b> more
