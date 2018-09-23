@@ -166,6 +166,8 @@ public class UDatePicker
             for (Month month : months) {
                 ((CalenderViewFragment) mViewPagerAdapter.getItem(months.indexOf(month))).setMonth(month);
             }
+            ((CalenderViewFragment) mViewPagerAdapter.getItem(12)).setMonth(months.get(0));
+            ((CalenderViewFragment) mViewPagerAdapter.getItem(13)).setMonth(months.get(1));
             mViewPagerAdapter.notifyDataSetChanged();
         });
         topbarYear.setOnClickListener(v -> {
@@ -212,6 +214,8 @@ public class UDatePicker
             for (Month month : months) {
                 ((CalenderViewFragment) mViewPagerAdapter.getItem(months.indexOf(month))).setMonth(month);
             }
+            ((CalenderViewFragment) mViewPagerAdapter.getItem(12)).setMonth(months.get(0));
+            ((CalenderViewFragment) mViewPagerAdapter.getItem(13)).setMonth(months.get(1));
             mViewPagerAdapter.notifyDataSetChanged();
         });
 
