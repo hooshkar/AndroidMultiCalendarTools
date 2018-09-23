@@ -24,6 +24,7 @@ public class DateSystem implements IDate, Comparable<IDate> {
     public DateSystem(Date date, Calendar calendar) {
         Calendar = calendar;
 
+        if (date.getMonth() == 0) throw new IllegalArgumentException("month cant be 0");
         switch (Calendar) {
             case Jalali: {
                 Date_SD = new JalaliDateTime(date);
@@ -48,6 +49,7 @@ public class DateSystem implements IDate, Comparable<IDate> {
     public DateSystem(int year, int month, int day, Calendar calendar) {
         Calendar = calendar;
 
+        if (month == 0) throw new IllegalArgumentException("month cant be 0");
         switch (Calendar) {
             case Jalali: {
                 Date_SD = new JalaliDateTime(year, month, day);
@@ -247,10 +249,7 @@ public class DateSystem implements IDate, Comparable<IDate> {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public boolean equals(Object obj) {
-        if (null == obj) {
-            return false;
-        }
-        return obj instanceof DateSystem && equals((DateSystem) obj);
+        return null != obj && obj instanceof DateSystem && equals((DateSystem) obj);
     }
 
     public int hashCode() {
@@ -260,11 +259,7 @@ public class DateSystem implements IDate, Comparable<IDate> {
     @Override
     public long getUnixTime() {
 
-        GregorianDateTime g = getGregorianDateTime();
         long from = DateConverter.GregorianToDays(1970, 1, 1);
-        long d = g.getDays() - from;
-        long s = d * 86400;
-        return s;
+        return (getGregorianDateTime().getDays() - from) * 86400;
     }
-
 }

@@ -127,12 +127,12 @@ public class UDatePicker
 
         LinearLayout topbarMonth = findViewById(R.id.linear_top_bar_month);
         LinearLayout topbarYear = findViewById(R.id.linear_top_bar_year);
-
         TextView topbarYearText = findViewById(R.id.text_top_bar_year);
-
         TextView topbarMonthTitle = findViewById(R.id.text_top_bar_month_title);
         TextView topbarYearTitle = findViewById(R.id.text_top_bar_year_title);
         ListView yearListview = findViewById(R.id.list_year_picker);
+        ImageView arrowLeft = findViewById(R.id.img_calender_arrow_left);
+        ImageView arrowRight = findViewById(R.id.img_calender_arrow_right);
         View yearPickerView = this.getChildAt(1);
 
 
@@ -146,8 +146,10 @@ public class UDatePicker
         topbarMonth.setOnClickListener(v -> {
             if (yearPickerView.getVisibility() == View.GONE) return;
 
-            topbarMonth.setAlpha(1);
-            topbarYear.setAlpha((float) 0.6);
+            arrowLeft.animate().alpha( 1).setDuration(200).start();
+            arrowRight.animate().alpha(1).setDuration(200).start();
+            topbarMonth.animate().alpha(1).setDuration(200).start();
+            topbarYear.animate().alpha((float) 0.6).setDuration(200).start();
             postDelayed(() -> yearPickerView.setVisibility(GONE), 300);
             yearPickerView.animate().alpha(0).setDuration(300).start();
             ExpandAndCollapseAnimation.Collapse(topbarYearTitle);
@@ -169,8 +171,10 @@ public class UDatePicker
         topbarYear.setOnClickListener(v -> {
             if (yearPickerView.getVisibility() == VISIBLE) return;
 
-            topbarMonth.setAlpha((float) 0.6);
-            topbarYear.setAlpha(1);
+            arrowLeft.animate().alpha((float) 0.6).setDuration(200).start();
+            arrowRight.animate().alpha((float) 0.6).setDuration(200).start();
+            topbarMonth.animate().alpha((float) 0.6).setDuration(200).start();
+            topbarYear.animate().alpha(1).setDuration(200).start();
             yearPickerView.setVisibility(VISIBLE);
             yearPickerView.animate().alpha(1).setDuration(300).start();
             ExpandAndCollapseAnimation.Collapse(topbarMonthTitle);
@@ -219,7 +223,6 @@ public class UDatePicker
 
                 if (scrollState == SCROLL_STATE_IDLE) {
                     yearListview.setSelection(currentSelectedYear - 3);
-                    //yearListview.scrollTo(0, yearListview.getScrollY() + Convert.DpToPixel(22));
                 }
             }
 

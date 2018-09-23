@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         lang.setOnClickListener(v -> {
             if (getString(R.string.LangId).equals("en")) {
                 setLocale("fa");

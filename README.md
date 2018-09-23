@@ -69,7 +69,7 @@ and its easy to add new language see
 # todo
 1. <s>fix year picker</s>
 2. add dialog mode
-3. jitpack realse
+3. make jar
 
 # LICENCE
 under [MIT](https://github.com/hooshkar/AndroidMultiCalenderTools/blob/master/LICENSE) licence
