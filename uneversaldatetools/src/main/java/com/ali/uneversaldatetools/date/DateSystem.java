@@ -4,6 +4,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 
 import com.ali.uneversaldatetools.model.DateModel;
 import com.ali.uneversaldatetools.tools.DateTools;
@@ -50,7 +51,10 @@ public class DateSystem implements IDate, Comparable<IDate> {
     public DateSystem(int year, int month, int day, Calendar calendar) {
         Calendar = calendar;
 
-        if (month == 0) throw new IllegalArgumentException("month cant be 0");
+        Log.d("month: ", String.valueOf(month));
+        if (month > 12) month -= 12;
+        else if (month < 1) month += 12;
+
         switch (Calendar) {
             case Jalali: {
                 Date_SD = new JalaliDateTime(year, month, day);
@@ -68,7 +72,6 @@ public class DateSystem implements IDate, Comparable<IDate> {
                 throw new RuntimeException("Invalid Calendar Type!");
             }
         }
-
         Date = Date_SD.getDate();
     }
 
