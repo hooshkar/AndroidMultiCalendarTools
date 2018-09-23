@@ -8,7 +8,7 @@ import com.ali.uneversaldatetools.model.DateModel;
 
 public class DateConverter {
 
-    static boolean IsJalaliLeap(int year) {
+    public static boolean IsJalaliLeap(int year) {
         if (year >= 1 && year <= 474) {
             year += 2346;
         } else if (year > 474) {
@@ -30,7 +30,7 @@ public class DateConverter {
         return year == 0;
     }
 
-    static boolean IsGregorianLeap(int year) {
+    public static boolean IsGregorianLeap(int year) {
         return year % 400 == 0 || (year % 100 != 0 & year % 4 == 0);
     }
 
@@ -462,27 +462,27 @@ public class DateConverter {
     }
 
 
-    static DateModel JalaliToGregorian(int year, int month, int day) {
+    public static DateModel JalaliToGregorian(int year, int month, int day) {
         return DaysToGregorian(JalaliToDays(year, month, day) + 226895);
     }
 
-    static DateModel JalaliToHijri(int year, int month, int day) {
+    public static DateModel JalaliToHijri(int year, int month, int day) {
         return DaysToHijri(JalaliToDays(year, month, day) - 119);
     }
 
-    static DateModel GregorianToJalali(int year, int month, int day) {
+    public static DateModel GregorianToJalali(int year, int month, int day) {
         return DaysToJalali(GregorianToDays(year, month, day) - 226895);
     }
 
-    static DateModel GregorianToHijri(int year, int month, int day) {
+    public static DateModel GregorianToHijri(int year, int month, int day) {
         return DaysToHijri(GregorianToDays(year, month, day) - 227014);
     }
 
-    static DateModel HijriToJalali(int year, int month, int day) {
+    public static DateModel HijriToJalali(int year, int month, int day) {
         return DaysToJalali(HijriToDays(year, month, day) + 119);
     }
 
-    static DateModel HijriToGregorian(int year, int month, int day) {
+    public static DateModel HijriToGregorian(int year, int month, int day) {
         return DaysToGregorian(HijriToDays(year, month, day) + 227014);
     }
 

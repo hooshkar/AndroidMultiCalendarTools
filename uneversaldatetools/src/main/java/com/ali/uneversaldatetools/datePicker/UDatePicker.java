@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -47,6 +48,7 @@ public class UDatePicker
     private ViewPagerAdapter mViewPagerAdapter;
     private ViewPager mViewPager;
     private TextView topbarMonthText;
+    private int currentSelectedYear = 0;
 
     private DateSystem mDateSystem; // current selected date
 
@@ -150,6 +152,19 @@ public class UDatePicker
             yearPickerView.animate().alpha(0).setDuration(300).start();
             ExpandAndCollapseAnimation.Collapse(topbarYearTitle);
             ExpandAndCollapseAnimation.Expand(topbarMonthTitle);
+
+            //refresh viewPager
+            mDateSystem = new DateSystem(
+                    currentSelectedYear,
+                    mDateSystem.getMonth(),
+                    mDateSystem.getDay(),
+                    mDateSystem.getCalendar());
+
+            List<Month> months = LoadMonths(mDateSystem);
+            for (Month month : months) {
+                ((CalenderViewFragment) mViewPagerAdapter.getItem(months.indexOf(month))).setMonth(month);
+            }
+            mViewPagerAdapter.notifyDataSetChanged();
         });
         topbarYear.setOnClickListener(v -> {
             if (yearPickerView.getVisibility() == VISIBLE) return;
@@ -167,8 +182,11 @@ public class UDatePicker
         ArrayAdapter<String> adapter = new ArrayAdapter<>(mActivity, R.layout.item_year, R.id.text_year_item, LoadYears());
         yearListview.setAdapter(adapter);
         yearListview.setSelection(selectedYear - 3);
-
         yearListview.setOnItemClickListener((parent, view, position, id) -> {
+
+            Log.d("selectedCO", String.valueOf(position) + " " + String.valueOf(currentSelectedYear));
+            if (position != currentSelectedYear) return; //make on selected items un clickable
+
             topbarYearText.setText(StringGenerator.NumberToString(mActivity.getResources(), position));
             yearListview.setSelection(position - 3);
 
@@ -191,6 +209,29 @@ public class UDatePicker
                 ((CalenderViewFragment) mViewPagerAdapter.getItem(months.indexOf(month))).setMonth(month);
             }
             mViewPagerAdapter.notifyDataSetChanged();
+        });
+
+        //new
+
+        yearListview.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                if (scrollState == SCROLL_STATE_IDLE) {
+                    yearListview.setSelection(currentSelectedYear - 3);
+                    //yearListview.scrollTo(0, yearListview.getScrollY() + Convert.DpToPixel(22));
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (currentSelectedYear != firstVisibleItem) {
+                    Log.d("selectedCO", String.valueOf(firstVisibleItem + 3));
+                    topbarYearText.setText(StringGenerator.NumberToString(mActivity.getResources(), firstVisibleItem + 3));
+
+                    currentSelectedYear = firstVisibleItem + 3;
+                }
+            }
         });
     }
 
@@ -241,14 +282,19 @@ public class UDatePicker
     }
 
     private void SetupArrowKeys() {
+
         ImageView arrowLeft = findViewById(R.id.img_calender_arrow_left);
         ImageView arrowRight = findViewById(R.id.img_calender_arrow_right);
 
         arrowLeft.setOnClickListener(v -> {
+            //disable clicks when year picker is visible
+            if (this.getChildAt(1).getVisibility() == VISIBLE) return;
             mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
         });
 
         arrowRight.setOnClickListener(v -> {
+            //disable clicks when year picker is visible
+            if (this.getChildAt(1).getVisibility() == VISIBLE) return;
             mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
         });
     }
@@ -276,7 +322,7 @@ public class UDatePicker
 
     private List<String> LoadYears() {
         List<String> years = new ArrayList<>();
-        for (int i = 0; i < 3000; i++) {
+        for (int i = 0; i <= 3000; i++) {
             years.add(StringGenerator.NumberToString(mActivity.getResources(), i));
         }
         return years;
