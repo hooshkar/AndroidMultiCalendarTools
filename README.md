@@ -67,7 +67,7 @@ and its easy to add new language see
 [here](https://github.com/hooshkar/AndroidMultiCalenderTools/wiki/language).
 
 # todo
-1. fix year picker
+1. <s>fix year picker</s>
 2. add dialog mode
 3. jitpack realse
 
