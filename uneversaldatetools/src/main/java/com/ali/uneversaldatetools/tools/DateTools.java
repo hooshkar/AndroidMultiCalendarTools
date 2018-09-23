@@ -1,5 +1,7 @@
 package com.ali.uneversaldatetools.tools;
 
+import com.ali.uneversaldatetools.model.DateModel;
+
 import java.util.Date;
 
 /**
@@ -8,18 +10,10 @@ import java.util.Date;
 
 public class DateTools {
 
-//    public static int getCurrentDays() {
-//        Long currentMilSeconds = new Date().getTime();
-//        //1 day = 86400000 ms
-//        // x    =  cms
-//        //so :
-//        return (int) (currentMilSeconds / 86400000);
-//    }
-
-    public static Date getCurrentDate() {
+    public static DateModel getCurrentDate() {
         Date date = new Date();
-        date.setYear(date.getYear() + 1900); //
+        date.setYear(date.getYear() + 1900);
         date.setMonth(date.getMonth() + 1);  // change index to 1
-        return date;
+        return new DateModel(date.getYear(), date.getMonth(), date.getDate());
     }
 }

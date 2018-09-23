@@ -5,8 +5,6 @@ import android.support.annotation.NonNull;
 import com.ali.uneversaldatetools.model.DateModel;
 import com.ali.uneversaldatetools.tools.DateTools;
 
-import java.util.Date;
-
 /**
  * Created by ali on 9/5/18.
  */
@@ -33,10 +31,10 @@ public class GregorianDateTime implements IDate, Comparable<GregorianDateTime> {
             31
     };
 
-    public GregorianDateTime(Date dateTime) {
+    public GregorianDateTime(DateModel dateTime) {
         Year = dateTime.getYear();
         Month = dateTime.getMonth();
-        Day = dateTime.getDate();
+        Day = dateTime.getDay();
     }
 
     public GregorianDateTime(int year, int month, int day) {
@@ -47,9 +45,9 @@ public class GregorianDateTime implements IDate, Comparable<GregorianDateTime> {
 
     public GregorianDateTime(int days) {
         DateModel sd = DateConverter.DaysToGregorian(days);
-        Year = sd.year;
-        Month = sd.month;
-        Day = sd.day;
+        Year = sd.getYear();
+        Month = sd.getMonth();
+        Day = sd.getDay();
     }
 
     public static GregorianDateTime Parse(String s) {
@@ -75,37 +73,37 @@ public class GregorianDateTime implements IDate, Comparable<GregorianDateTime> {
         return new GregorianDateTime(DateTools.getCurrentDate());
     }
 
-    public Date getDate() {
-        return new Date(Year, Month, Day);
+    public DateModel getDate() {
+        return new DateModel(Year, Month, Day);
     }
 
-    public Date getFirstDayOfYear() {
-        return new Date(Year, 1, 1);
+    public DateModel getFirstDayOfYear() {
+        return new DateModel(Year, 1, 1);
     }
 
-    public Date getLastDayOfYear() {
-        return new Date(Year, 12, DaysInMonth[12], 23, 59, 59);
+    public DateModel getLastDayOfYear() {
+        return new DateModel(Year, 12, DaysInMonth[12], 23, 59, 59);
     }
 
-    public Date getFirstDayOfMonth() {
-        return new Date(Year, Month, 1);
+    public DateModel getFirstDayOfMonth() {
+        return new DateModel(Year, Month, 1);
     }
 
-    public Date getLastDayOfMonth() {
-        return new Date(Year, Month, DaysInMonth[Month] - (Month == 2 && !DateConverter.IsGregorianLeap(Year) ? 1 : 0), 23, 59, 59);
+    public DateModel getLastDayOfMonth() {
+        return new DateModel(Year, Month, DaysInMonth[Month] - (Month == 2 && !DateConverter.IsGregorianLeap(Year) ? 1 : 0), 23, 59, 59);
     }
 
-    public Date FirstDayOfSeason(Season season) {
+    public DateModel FirstDayOfSeason(Season season) {
         int mSeason = season == Season.Winter ? 1 : season.getValue() + 1;
         int month = 1 + (mSeason - 1) * 3;
         return new GregorianDateTime(Year, month, 1).getDate();
     }
 
-    public Date LastDayOfSeason(Season season) {
+    public DateModel LastDayOfSeason(Season season) {
         int mSeason = season == Season.Winter ? 1 : season.getValue() + 1;
         int month = 3 + (mSeason - 1) * 3;
         int day = DaysInMonth[month] - (month == 2 && !DateConverter.IsGregorianLeap(Year) ? 1 : 0);
-        return new Date(Year, month, day, 23, 59, 59);
+        return new DateModel(Year, month, day, 23, 59, 59);
     }
 
     public Season getSeason() {
@@ -132,7 +130,7 @@ public class GregorianDateTime implements IDate, Comparable<GregorianDateTime> {
 
     }
 
-    public Date AddYears(int years) {
+    public DateModel AddYears(int years) {
         int y = Year + years;
         int m = Month;
         int maxd = DaysInMonth[m];
@@ -141,7 +139,7 @@ public class GregorianDateTime implements IDate, Comparable<GregorianDateTime> {
         return new GregorianDateTime(y, m, d).getDate();
     }
 
-    public Date AddMonths(int months) {
+    public DateModel AddMonths(int months) {
         int m = Month - 1 + months;
         int y = Year + (m / 12);
         m = (m % 12) + 1;
@@ -151,7 +149,7 @@ public class GregorianDateTime implements IDate, Comparable<GregorianDateTime> {
         return new GregorianDateTime(y, m, d).getDate();
     }
 
-    public Date AddDays(int days) {
+    public DateModel AddDays(int days) {
         return new GregorianDateTime(getDays() + days).getDate();
     }
 
@@ -242,9 +240,5 @@ public class GregorianDateTime implements IDate, Comparable<GregorianDateTime> {
         hashCode = (hashCode * 397) ^ Month;
         hashCode = (hashCode * 397) ^ Day;
         return hashCode;
-    }
-
-    public long getUnixTime() {
-        return getDate().getTime() / 1000;
     }
 }

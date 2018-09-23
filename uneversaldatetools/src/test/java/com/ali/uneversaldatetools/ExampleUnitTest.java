@@ -3,14 +3,13 @@ package com.ali.uneversaldatetools;
 import com.ali.uneversaldatetools.date.Calendar;
 import com.ali.uneversaldatetools.date.DateConverter;
 import com.ali.uneversaldatetools.date.DateSystem;
+import com.ali.uneversaldatetools.date.GregorianDateTime;
 import com.ali.uneversaldatetools.date.HijriDateTime;
 import com.ali.uneversaldatetools.date.JalaliDateTime;
-import com.ali.uneversaldatetools.date.GregorianDateTime;
+import com.ali.uneversaldatetools.model.DateModel;
 import com.ali.uneversaldatetools.tools.DateTools;
 
 import org.junit.Test;
-
-import java.util.Date;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -20,8 +19,17 @@ import java.util.Date;
 public class ExampleUnitTest {
 
     @Test
+    public void CurrentTimeTest(){
+        DateModel date = DateTools.getCurrentDate();
+        Log(date.year);
+        Log(date.month);
+        Log(date.day);
+    }
+
+
+    @Test
     public void Test() {
-        Date date = DateTools.getCurrentDate();
+        DateModel date = DateTools.getCurrentDate();
         DateSystem dateSystem = new DateSystem(date,Calendar.Jalali);
         Log(dateSystem.getYear() + "/" + dateSystem.getMonth() + "/" + dateSystem.getDate());
     }
@@ -29,7 +37,7 @@ public class ExampleUnitTest {
     @Test
     public void MiladiTest() {
 
-        Date date = DateTools.getCurrentDate();
+        DateModel date = DateTools.getCurrentDate();
         date.setYear(date.getYear());
         GregorianDateTime gregorianDateTime = new GregorianDateTime(date);
         HijriDateTime hijriDateTime = gregorianDateTime.getHijriDateTime();
@@ -37,7 +45,7 @@ public class ExampleUnitTest {
 
         Log("------date-------");
         Log("year: " + date.getYear());
-        Log("day: " + date.getDate());
+        Log("day: " + date.getDay());
         Log("month: " + date.getMonth());
         Log("str: " + date.toString());
 

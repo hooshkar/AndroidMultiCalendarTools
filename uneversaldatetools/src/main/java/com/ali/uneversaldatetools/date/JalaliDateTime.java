@@ -5,8 +5,6 @@ import android.support.annotation.NonNull;
 import com.ali.uneversaldatetools.model.DateModel;
 import com.ali.uneversaldatetools.tools.DateTools;
 
-import java.util.Date;
-
 /**
  * Created by ali on 9/5/18.
  */
@@ -33,12 +31,12 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
             30
     };
 
-    public JalaliDateTime(Date dateTime) {
-        DateModel sd = DateConverter.GregorianToJalali(dateTime.getYear(), dateTime.getMonth(), dateTime.getDate());
+    public JalaliDateTime(DateModel dateTime) {
+        DateModel sd = DateConverter.GregorianToJalali(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
 
-        Year = sd.year;
-        Month = sd.month;
-        Day = sd.day;
+        Year = sd.getYear();
+        Month = sd.getMonth();
+        Day = sd.getDay();
     }
 
     public JalaliDateTime(int year, int month, int day) {
@@ -50,9 +48,9 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
     public JalaliDateTime(int days) {
         DateModel sd = DateConverter.DaysToJalali(days);
 
-        Year = sd.year;
-        Month = sd.month;
-        Day = sd.day;
+        Year = sd.getYear();
+        Month = sd.getMonth();
+        Day = sd.getDay();
     }
 
     public static JalaliDateTime Parse(String s) {
@@ -78,42 +76,42 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
         return new JalaliDateTime(DateTools.getCurrentDate());
     }
 
-    public Date getDate() {
+    public DateModel getDate() {
         DateModel md = DateConverter.JalaliToGregorian(Year, Month, Day);
-        return new Date(md.year, md.month, md.day);
+        return new DateModel(md.getYear(), md.getMonth(), md.getDay());
     }
 
-    public Date getFirstDayOfYear() {
+    public DateModel getFirstDayOfYear() {
         DateModel md = DateConverter.JalaliToGregorian(Year, 1, 1);
-        return new Date(md.year, md.month, md.day);
+        return new DateModel(md.getYear(), md.getMonth(), md.getDay());
     }
 
-    public Date getLastDayOfYear() {
+    public DateModel getLastDayOfYear() {
         DateModel md = DateConverter.JalaliToGregorian(Year, 12,
                 DaysInMonth[12] - (!DateConverter.IsJalaliLeap(Year) ? 1 : 0));
-        return new Date(md.year, md.month, md.day, 23, 59, 59);
+        return new DateModel(md.getYear(), md.getMonth(), md.getDay(), 23, 59, 59);
     }
 
-    public Date getFirstDayOfMonth() {
+    public DateModel getFirstDayOfMonth() {
         DateModel md = DateConverter.JalaliToGregorian(Year, Month, 1);
-        return new Date(md.year, md.month, md.day);
+        return new DateModel(md.getYear(), md.getMonth(), md.getDay());
     }
 
-    public Date getLastDayOfMonth() {
+    public DateModel getLastDayOfMonth() {
         DateModel md = DateConverter.JalaliToGregorian(Year, Month, DaysInMonth[Month] - (Month == 12 && !DateConverter.IsJalaliLeap(Year) ? 1 : 0));
-        return new Date(md.year, md.month, md.day, 23, 59, 59);
+        return new DateModel(md.getYear(), md.getMonth(), md.getDay(), 23, 59, 59);
     }
 
-    public Date FirstDayOfSeason(Season season) {
+    public DateModel FirstDayOfSeason(Season season) {
         int month = 1 + (season.getValue() - 1) * 3;
         return new JalaliDateTime(Year, month, 1).getDate();
     }
 
-    public Date LastDayOfSeason(Season season) {
+    public DateModel LastDayOfSeason(Season season) {
         int month = 3 + (season.getValue() - 1) * 3;
         int day = DaysInMonth[month] - (month == 12 && !DateConverter.IsJalaliLeap(Year) ? 1 : 0);
         DateModel md = DateConverter.JalaliToGregorian(Year, month, day);
-        return new Date(md.year, md.month, md.day, 23, 59, 59);
+        return new DateModel(md.getYear(), md.getMonth(), md.getDay(), 23, 59, 59);
     }
 
     public Season getSeason() {
@@ -138,7 +136,7 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
         throw new IndexOutOfBoundsException("season not valid");
     }
 
-    public Date AddYears(int years) {
+    public DateModel AddYears(int years) {
         int y = Year + years;
         int m = Month;
         int maxd = DaysInMonth[m];
@@ -147,7 +145,7 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
         return new JalaliDateTime(y, m, d).getDate();
     }
 
-    public Date AddMonths(int months) {
+    public DateModel AddMonths(int months) {
         int m = Month - 1 + months;
         int y = Year + (m / 12);
         m = (m % 12) + 1;
@@ -157,7 +155,7 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
         return new JalaliDateTime(y, m, d).getDate();
     }
 
-    public Date AddDays(int days) {
+    public DateModel AddDays(int days) {
         return new JalaliDateTime(getDays() + days).getDate();
     }
 
@@ -252,7 +250,4 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
         return hashCode;
     }
 
-    public long getUnixTime() {
-        return getDate().getTime() / 1000;
-    }
 }

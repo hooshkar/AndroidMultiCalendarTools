@@ -5,8 +5,6 @@ import android.support.annotation.NonNull;
 import com.ali.uneversaldatetools.model.DateModel;
 import com.ali.uneversaldatetools.tools.DateTools;
 
-import java.util.Date;
-
 /**
  * Created by ali on 9/5/18.
  */
@@ -33,12 +31,12 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
             30
     };
 
-    public HijriDateTime(Date date) {
-        DateModel sd = DateConverter.GregorianToHijri(date.getYear(), date.getMonth(), date.getDate());
+    public HijriDateTime(DateModel date) {
+        DateModel sd = DateConverter.GregorianToHijri(date.getYear(), date.getMonth(), date.getDay());
 
-        Year = sd.year;
-        Month = sd.month;
-        Day = sd.day;
+        Year = sd.getYear();
+        Month = sd.getMonth();
+        Day = sd.getDay();
     }
 
     public HijriDateTime(int year, int month, int day) {
@@ -50,9 +48,9 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
     public HijriDateTime(int days) {
         DateModel sd = DateConverter.DaysToHijri(days);
 
-        Year = sd.year;
-        Month = sd.month;
-        Day = sd.day;
+        Year = sd.getYear();
+        Month = sd.getMonth();
+        Day = sd.getDay();
     }
 
     public static HijriDateTime Parse(String date) {
@@ -78,35 +76,33 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
         return new HijriDateTime(DateTools.getCurrentDate());
     }
 
-
-    public Date getDate() {
+    public DateModel getDate() {
         DateModel md = DateConverter.HijriToGregorian(Year, Month, Day);
-        return new Date(md.year, md.month, md.day);
+        return new DateModel(md.getYear(), md.getMonth(), md.getDay());
     }
 
-
-    public Date getFirstDayOfYear() {
+    public DateModel getFirstDayOfYear() {
         DateModel md = DateConverter.HijriToGregorian(Year, 1, 1);
-        return new Date(md.year, md.month, md.day);
+        return new DateModel(md.getYear(), md.getMonth(), md.getDay());
     }
 
-    public Date getLastDayOfYear() {
+    public DateModel getLastDayOfYear() {
         DateModel md = DateConverter.HijriToGregorian(Year, 12, DaysInMonth[12] - (!DateConverter.IsHijriLeap(Year) ? 1 : 0));
-        return new Date(md.year, md.month, md.day, 23, 59, 59);
+        return new DateModel(md.getYear(), md.getMonth(), md.getDay(), 23, 59, 59);
     }
 
-    public Date getFirstDayOfMonth() {
+    public DateModel getFirstDayOfMonth() {
         DateModel md = DateConverter.HijriToGregorian(Year, Month, 1);
-        return new Date(md.year, md.month, md.day);
+        return new DateModel(md.getYear(), md.getMonth(), md.getDay());
     }
 
-    public Date getLastDayOfMonth() {
+    public DateModel getLastDayOfMonth() {
         DateModel md = DateConverter.HijriToGregorian(Year, Month, DaysInMonth[Month] - (Month == 12 && !DateConverter.IsHijriLeap(Year) ? 1 : 0));
-        return new Date(md.year, md.month, md.day, 23, 59, 59);
+        return new DateModel(md.getYear(), md.getMonth(), md.getDay(), 23, 59, 59);
     }
 
-    public Date FirstDayOfSeason(Season season) {
-        Date mFirstDayOfSeason = new GregorianDateTime(getDate()).FirstDayOfSeason(season);
+    public DateModel FirstDayOfSeason(Season season) {
+        DateModel mFirstDayOfSeason = new GregorianDateTime(getDate()).FirstDayOfSeason(season);
         HijriDateTime firstDayOfSeason = new HijriDateTime(mFirstDayOfSeason);
 
         if (firstDayOfSeason.Year == Year) {
@@ -130,7 +126,7 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
     }
 
 
-    public Date LastDayOfSeason(Season season) {
+    public DateModel LastDayOfSeason(Season season) {
         return new GregorianDateTime(FirstDayOfSeason(season)).LastDayOfSeason(season);
     }
 
@@ -158,7 +154,7 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
     }
 
 
-    public Date AddYears(int years) {
+    public DateModel AddYears(int years) {
         int y = Year + years;
         int m = Month;
         int maxd = DaysInMonth[m];
@@ -168,7 +164,7 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
     }
 
 
-    public Date AddMonths(int months) {
+    public DateModel AddMonths(int months) {
         int m = Month - 1 + months;
         int y = Year + (m / 12);
         m = (m % 12) + 1;
@@ -179,7 +175,7 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
     }
 
 
-    public Date AddDays(int days) {
+    public DateModel AddDays(int days) {
         return new HijriDateTime(getDays() + days).getDate();
     }
 
@@ -284,9 +280,5 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
         hashCode = (hashCode * 397) ^ Month;
         hashCode = (hashCode * 397) ^ Day;
         return hashCode;
-    }
-
-    public long getUnixTime() {
-        return getDate().getTime() / 1000;
     }
 }

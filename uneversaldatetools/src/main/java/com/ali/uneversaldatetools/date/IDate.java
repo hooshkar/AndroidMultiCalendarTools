@@ -1,6 +1,6 @@
 package com.ali.uneversaldatetools.date;
 
-import java.util.Date;
+import com.ali.uneversaldatetools.model.DateModel;
 
 /**
  * Created by ali on 9/5/18.
@@ -13,24 +13,23 @@ public interface IDate {
     int getDay();
     int getDays();
     int getDaysOfMonth();
-    Date getDate();
+    DateModel getDate();
     JalaliDateTime getJalaliDateTime();
     GregorianDateTime getGregorianDateTime();
     HijriDateTime getHijriDateTime();
-    Date getFirstDayOfYear();
-    Date getLastDayOfYear ();
-    Date getFirstDayOfMonth ();
-    Date getLastDayOfMonth ();
-    Date FirstDayOfSeason(Season season);
-    Date LastDayOfSeason(Season season);
+    DateModel getFirstDayOfYear();
+    DateModel getLastDayOfYear ();
+    DateModel getFirstDayOfMonth ();
+    DateModel getLastDayOfMonth ();
+    DateModel FirstDayOfSeason(Season season);
+    DateModel LastDayOfSeason(Season season);
     Season getSeason();
     DayOfWeek getDayOfWeek ();
-    Date AddYears(int years);
-    Date AddMonths(int months);
-    Date AddDays(int days);
+    DateModel AddYears(int years);
+    DateModel AddMonths(int months);
+    DateModel AddDays(int days);
     String getLetters ();
     String getMonthLetters ();
     String getYearMonthLetters();
     String getToYearMonth();
-    long getUnixTime();
 }

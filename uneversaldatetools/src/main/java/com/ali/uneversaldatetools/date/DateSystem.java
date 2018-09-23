@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 
+import com.ali.uneversaldatetools.model.DateModel;
 import com.ali.uneversaldatetools.tools.DateTools;
 
 import java.util.Date;
@@ -18,10 +19,10 @@ import java.util.Objects;
 public class DateSystem implements IDate, Comparable<IDate> {
 
     private Calendar Calendar;
-    private Date Date;
+    private DateModel Date;
     private IDate Date_SD;
 
-    public DateSystem(Date date, Calendar calendar) {
+    public DateSystem(DateModel date, Calendar calendar) {
         Calendar = calendar;
 
         if (date.getMonth() == 0) throw new IllegalArgumentException("month cant be 0");
@@ -75,7 +76,7 @@ public class DateSystem implements IDate, Comparable<IDate> {
         return Calendar;
     }
 
-    public Date getDate() {
+    public DateModel getDate() {
         return Date;
     }
 
@@ -111,27 +112,27 @@ public class DateSystem implements IDate, Comparable<IDate> {
         return Date_SD.getDays();
     }
 
-    public Date getFirstDayOfYear() {
+    public DateModel getFirstDayOfYear() {
         return Date_SD.getFirstDayOfYear();
     }
 
-    public Date getLastDayOfYear() {
+    public DateModel getLastDayOfYear() {
         return Date_SD.getLastDayOfYear();
     }
 
-    public Date getFirstDayOfMonth() {
+    public DateModel getFirstDayOfMonth() {
         return Date_SD.getFirstDayOfMonth();
     }
 
-    public Date getLastDayOfMonth() {
+    public DateModel getLastDayOfMonth() {
         return Date_SD.getLastDayOfMonth();
     }
 
-    public Date FirstDayOfSeason(Season season) {
+    public DateModel FirstDayOfSeason(Season season) {
         return Date_SD.FirstDayOfSeason(season);
     }
 
-    public Date LastDayOfSeason(Season season) {
+    public DateModel LastDayOfSeason(Season season) {
         return Date_SD.LastDayOfSeason(season);
     }
 
@@ -159,15 +160,15 @@ public class DateSystem implements IDate, Comparable<IDate> {
         return Date_SD.getYearMonthLetters();
     }
 
-    public Date AddYears(int years) {
+    public DateModel AddYears(int years) {
         return Date_SD.AddYears(years);
     }
 
-    public Date AddMonths(int months) {
+    public DateModel AddMonths(int months) {
         return Date_SD.AddMonths(months);
     }
 
-    public Date AddDays(int days) {
+    public DateModel AddDays(int days) {
         return Date_SD.AddDays(days);
     }
 
@@ -239,7 +240,7 @@ public class DateSystem implements IDate, Comparable<IDate> {
     }
 
     public int CompareTo(IDate t2) {
-        return Date.compareTo(t2.getDate());
+        return Date.compareTo(t2);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -256,9 +257,7 @@ public class DateSystem implements IDate, Comparable<IDate> {
         return (Calendar.getValue() * 397) ^ (Date_SD.hashCode());
     }
 
-    @Override
     public long getUnixTime() {
-
         long from = DateConverter.GregorianToDays(1970, 1, 1);
         return (getGregorianDateTime().getDays() - from) * 86400;
     }
