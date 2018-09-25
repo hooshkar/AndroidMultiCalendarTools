@@ -6,6 +6,8 @@
 
     <string name="month">month</string>
     <string name="year">year</string>
+    <string name="select">select</string>
+    <string name="cancel">cancel</string>
 
     <string-array name="jalali_months">
         <item>Farvardin</item>

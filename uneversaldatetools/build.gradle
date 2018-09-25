@@ -25,10 +25,24 @@ android {
     }
 }
 
+// for make .jar file
+//task deleteJar(type: Delete) {
+//    delete 'libs/jars/universalDateTools.jar'
+//}
+//
+//task createJar(type: Copy) {
+//    from('build/intermediates/bundles/release/')
+//    into('libs/jars/')
+//    include('classes.jar')
+//    rename('classes.jar', 'universalDateTools.jar')
+//}
+//
+//createJar.dependsOn(deleteJar, build)
+
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.0'
-    compile "com.android.support:recyclerview-v7:27.1.1"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:0.5'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'

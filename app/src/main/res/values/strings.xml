@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">UniversalDateTools</string>
+    <string name="app_name" translatable="false">UniversalDateTools</string>
+    <string name="LangId" translatable="false">en</string>
 </resources>

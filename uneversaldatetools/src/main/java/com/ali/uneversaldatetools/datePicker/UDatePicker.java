@@ -1,14 +1,14 @@
 package com.ali.uneversaldatetools.datePicker;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
@@ -44,7 +44,7 @@ public class UDatePicker
         ViewPager.OnPageChangeListener {
 
     private OnDateChangedListener listener;
-    private Activity mActivity;
+    private Context mContext;
     private ViewPagerAdapter mViewPagerAdapter;
     private ViewPager mViewPager;
     private TextView topbarMonthText;
@@ -69,29 +69,31 @@ public class UDatePicker
 
     private void Init(Context context) {
 
-        this.mActivity = (Activity) context;
+        LayoutInflater mInflater = LayoutInflater.from(context);
 
-        View dayPickerView = mActivity.getLayoutInflater().inflate(R.layout.u_date_picker_days_month, null);
+        this.mContext = context;
+
+        View dayPickerView = mInflater.inflate(R.layout.u_date_picker_days_month, null);
         addView(dayPickerView);
 
-        View yearPickerView = mActivity.getLayoutInflater().inflate(R.layout.u_date_picker_year, null);
+        View yearPickerView = mInflater.inflate(R.layout.u_date_picker_year, null);
         addView(yearPickerView);
 
     }
 
-    public void ShowDatePicker(@NonNull DateSystem defaultDate) {
+    public void ShowDatePicker(FragmentManager appCompatActivity, @NonNull DateSystem defaultDate) {
         mDateSystem = defaultDate;
-        SetupDayPicker(LoadMonths(mDateSystem));
+        SetupDayPicker(appCompatActivity, LoadMonths(mDateSystem));
         SetupYearPicker(mDateSystem.getYear());
     }
 
-    public void ShowDatePicker(Calendar calendar) {
+    public void ShowDatePicker(FragmentManager appCompatActivity, Calendar calendar) {
         DateSystem defaultDate = new DateSystem(DateTools.getCurrentDate(), calendar); // now
-        ShowDatePicker(defaultDate);
+        ShowDatePicker(appCompatActivity, defaultDate);
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void SetupDayPicker(ArrayList<Month> months) {
+    private void SetupDayPicker(FragmentManager appCompatActivity, ArrayList<Month> months) {
         this.getLayoutParams().height = Convert.DpToPixel(350);
         this.getLayoutParams().width = Convert.DpToPixel(300);
         requestLayout();
@@ -110,7 +112,7 @@ public class UDatePicker
                 mDateSystem.getCalendar())
         );
 
-        mViewPagerAdapter = new ViewPagerAdapter(((AppCompatActivity) mActivity).getSupportFragmentManager());
+        mViewPagerAdapter = new ViewPagerAdapter(appCompatActivity);
         for (Month month : months) {
             mViewPagerAdapter.AddFragment(new CalenderViewFragment(month, months.indexOf(month), this));
         }
@@ -137,7 +139,7 @@ public class UDatePicker
 
 
         //top bar init
-        topbarYearText.setText(StringGenerator.NumberToString(mActivity.getResources(), selectedYear));
+        topbarYearText.setText(StringGenerator.NumberToString(mContext.getResources(), selectedYear));
 
         // visible/invisible + effect
 
@@ -146,7 +148,7 @@ public class UDatePicker
         topbarMonth.setOnClickListener(v -> {
             if (yearPickerView.getVisibility() == View.GONE) return;
 
-            arrowLeft.animate().alpha( 1).setDuration(200).start();
+            arrowLeft.animate().alpha(1).setDuration(200).start();
             arrowRight.animate().alpha(1).setDuration(200).start();
             topbarMonth.animate().alpha(1).setDuration(200).start();
             topbarYear.animate().alpha((float) 0.6).setDuration(200).start();
@@ -154,6 +156,8 @@ public class UDatePicker
             yearPickerView.animate().alpha(0).setDuration(300).start();
             ExpandAndCollapseAnimation.Collapse(topbarYearTitle);
             ExpandAndCollapseAnimation.Expand(topbarMonthTitle);
+
+            if (currentSelectedYear == mDateSystem.getYear()) return; //for optimize
 
             //refresh viewPager
             mDateSystem = new DateSystem(
@@ -185,7 +189,7 @@ public class UDatePicker
 
 
         //listView
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(mActivity, R.layout.item_year, R.id.text_year_item, LoadYears());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext, R.layout.item_year, R.id.text_year_item, LoadYears());
         yearListview.setAdapter(adapter);
         yearListview.setSelection(selectedYear - 3);
         yearListview.setOnItemClickListener((parent, view, position, id) -> {
@@ -193,7 +197,7 @@ public class UDatePicker
             Log.d("selectedCO", String.valueOf(position) + " " + String.valueOf(currentSelectedYear));
             if (position != currentSelectedYear) return; //make on selected items un clickable
 
-            topbarYearText.setText(StringGenerator.NumberToString(mActivity.getResources(), position));
+            topbarYearText.setText(StringGenerator.NumberToString(mContext.getResources(), position));
             yearListview.setSelection(position - 3);
 
             topbarMonth.setAlpha(1);
@@ -202,6 +206,8 @@ public class UDatePicker
             yearPickerView.animate().alpha(0).setDuration(300).start();
             ExpandAndCollapseAnimation.Collapse(topbarYearTitle);
             ExpandAndCollapseAnimation.Expand(topbarMonthTitle);
+
+            if (position == mDateSystem.getYear()) return; //for optimize
 
             //refresh viewPager
             mDateSystem = new DateSystem(
@@ -234,7 +240,7 @@ public class UDatePicker
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (currentSelectedYear != firstVisibleItem) {
                     Log.d("selectedCO", String.valueOf(firstVisibleItem + 3));
-                    topbarYearText.setText(StringGenerator.NumberToString(mActivity.getResources(), firstVisibleItem + 3));
+                    topbarYearText.setText(StringGenerator.NumberToString(mContext.getResources(), firstVisibleItem + 3));
 
                     currentSelectedYear = firstVisibleItem + 3;
                 }
@@ -283,7 +289,7 @@ public class UDatePicker
     private void SetupDayOfWeek() {
         LinearLayout daysOfWeek = findViewById(R.id.linear_day_of_week);
 
-        for (View view : new DaysViewGenerator(mActivity).getDayOfWeek()) {
+        for (View view : new DaysViewGenerator(mContext).getDayOfWeek()) {
             daysOfWeek.addView(view);
         }
     }
@@ -318,7 +324,7 @@ public class UDatePicker
 
             Month month = new Month(
                     i,
-                    StringGenerator.Month(mActivity.getResources(), i, calendar),
+                    StringGenerator.Month(mContext.getResources(), i, calendar),
                     dateLoop.getDaysOfMonth(),
                     dateLoop.getDayOfWeek()
             );
@@ -330,7 +336,7 @@ public class UDatePicker
     private List<String> LoadYears() {
         List<String> years = new ArrayList<>();
         for (int i = 0; i <= 3000; i++) {
-            years.add(StringGenerator.NumberToString(mActivity.getResources(), i));
+            years.add(StringGenerator.NumberToString(mContext.getResources(), i));
         }
         return years;
     }
@@ -387,7 +393,7 @@ public class UDatePicker
         Log.d("swipe", "select(" + String.valueOf(position) + ")");
 
         topbarMonthText.setText(StringGenerator.Month(
-                mActivity.getResources(),
+                mContext.getResources(),
                 getMonth(),
                 mDateSystem.getCalendar()));
 

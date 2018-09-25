@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">UneversalDateTools</string>
+
     <string name="LangId">fa</string>
 
     <string name="month">ماه</string>
     <string name="year">سال</string>
+    <string name="select">انتخاب</string>
+    <string name="cancel">بازگشت</string>
 
     <string-array name="jalali_months">
         <item>فروردین</item>

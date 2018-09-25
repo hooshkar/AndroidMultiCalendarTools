@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         Button getTime = findViewById(R.id.btn_get_time);
         TextView timeView = findViewById(R.id.text_time_show);
 
-        a.ShowDatePicker(Calendar.Gregorian);
+        a.ShowDatePicker(getSupportFragmentManager(), Calendar.Jalali);
         a.setOnDateSelected((dateSystem, unixTime) -> {
             timeView.setText("unix time is: " + unixTime);
             timeView.append("\ndate is: " + dateSystem);
@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
                 timeView.append("\ndate is: " + a.getSelectedDate());
             }
         });
-
 
         lang.setOnClickListener(v -> {
             if (getString(R.string.LangId).equals("en")) {
