@@ -3,7 +3,6 @@ package com.ali.uneversaldatetools;
 import com.ali.uneversaldatetools.date.Calendar;
 import com.ali.uneversaldatetools.date.DateConverter;
 import com.ali.uneversaldatetools.date.DateSystem;
-import com.ali.uneversaldatetools.date.GregorianDateTime;
 import com.ali.uneversaldatetools.date.HijriDateTime;
 import com.ali.uneversaldatetools.date.JalaliDateTime;
 import com.ali.uneversaldatetools.model.DateModel;
@@ -19,7 +18,7 @@ import org.junit.Test;
 public class ExampleUnitTest {
 
     @Test
-    public void CurrentTimeTest(){
+    public void CurrentTimeTest() {
         DateModel date = DateTools.getCurrentDate();
         Log(date.year);
         Log(date.month);
@@ -30,42 +29,40 @@ public class ExampleUnitTest {
     @Test
     public void Test() {
         DateModel date = DateTools.getCurrentDate();
-        DateSystem dateSystem = new DateSystem(date,Calendar.Jalali);
+        DateSystem dateSystem = new DateSystem(date, Calendar.Jalali);
         Log(dateSystem.getYear() + "/" + dateSystem.getMonth() + "/" + dateSystem.getDate());
     }
 
     @Test
-    public void MiladiTest() {
+    public void ToStringTest(){
+        JalaliDateTime dateTime = new JalaliDateTime(1377,1,27);
+        Log(dateTime);
+        Log(dateTime.toLongString());
+    }
 
-        DateModel date = DateTools.getCurrentDate();
-        date.setYear(date.getYear());
-        GregorianDateTime gregorianDateTime = new GregorianDateTime(date);
-        HijriDateTime hijriDateTime = gregorianDateTime.getHijriDateTime();
-        JalaliDateTime jalaliDateTime = gregorianDateTime.getJalaliDateTime();
+    @Test
+    public void UnixTest() {
+            int unixTime = 1538316150;
+        //     int max  2147483647;
+        DateModel dateModel = DateConverter.UnixToGregorian(unixTime);
+        Log(dateModel.year);
+        Log(dateModel.month);
+        Log(dateModel.day);
+        Log(dateModel.hour);
+        Log(dateModel.min);
+        Log(dateModel.sec);
+        Log("-------");
+        long days = DateConverter.GregorianToDays(1969, 12, 31);
+        Log(days);
+        long sec = days * 86400;
+        Log(sec);
+        dateModel = DateConverter.UnixToGregorian(unixTime - 2006141056);
+        Log(dateModel.year);
+        Log(dateModel.month);
+        Log(dateModel.day);
 
-        Log("------date-------");
-        Log("year: " + date.getYear());
-        Log("day: " + date.getDay());
-        Log("month: " + date.getMonth());
-        Log("str: " + date.toString());
-
-        Log("------miladi-------");
-        Log("year: " + gregorianDateTime.getYear());
-        Log("day: " + gregorianDateTime.getDate().getDay());
-        Log("month: " + gregorianDateTime.getMonth());
-        Log("str: " + gregorianDateTime.toString());
-
-        Log("------hijri-------");
-        Log("year: " + hijriDateTime.getYear());
-        Log("day: " + hijriDateTime.getDay());
-        Log("month: " + hijriDateTime.getMonth());
-        Log("str: " + hijriDateTime.toString());
-
-        Log("------jalali-------");
-        Log("year: " + jalaliDateTime.getYear());
-        Log("day: " + jalaliDateTime.getDay());
-        Log("month: " + jalaliDateTime.getMonth());
-        Log("str: " + jalaliDateTime.toString());
+        Log("--");
+        Log(Integer.MAX_VALUE);
     }
 
     @Test

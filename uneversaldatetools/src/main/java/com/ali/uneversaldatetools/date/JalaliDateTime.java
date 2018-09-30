@@ -14,8 +14,12 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
     private int Year;
     private int Month;
     private int Day;
+    private int Hour;
+    private int Min;
+    private int Sec;
 
-    public static final int[] DaysInMonth = {
+
+    private static final int[] DaysInMonth = {
             0,
             31,
             31,
@@ -31,26 +35,52 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
             30
     };
 
-    public JalaliDateTime(DateModel dateTime) {
-        DateModel sd = DateConverter.GregorianToJalali(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
+    public static GregorianDateTime FromUnixTime(int unixTime) {
+        DateModel dateModel = DateConverter.UnixToJalali(unixTime);
+        Validate(dateModel);
+        return new GregorianDateTime(dateModel);
+    }
 
-        Year = sd.getYear();
-        Month = sd.getMonth();
-        Day = sd.getDay();
+    public JalaliDateTime(DateModel dateTime) {
+        DateModel sd = DateConverter.GregorianToJalali(dateTime.year, dateTime.month, dateTime.day);
+
+        Validate(sd);
+
+        Year = sd.year;
+        Month = sd.month;
+        Day = sd.day;
+        Hour = sd.hour;
+        Min = sd.min;
+        Sec = sd.sec;
     }
 
     public JalaliDateTime(int year, int month, int day) {
+
+        Validate(new DateModel(year, month, day));
+
         Year = year;
         Month = month;
         Day = day;
     }
 
+    public JalaliDateTime(int year, int month, int day, int hour, int min, int sec) {
+
+        Validate(new DateModel(year, month, day,hour,min,sec));
+
+        Year = year;
+        Month = month;
+        Day = day;
+        Hour = hour;
+        Min = min;
+        Sec = sec;
+    }
+
     public JalaliDateTime(int days) {
         DateModel sd = DateConverter.DaysToJalali(days);
 
-        Year = sd.getYear();
-        Month = sd.getMonth();
-        Day = sd.getDay();
+        Year = sd.year;
+        Month = sd.month;
+        Day = sd.day;
     }
 
     public static JalaliDateTime Parse(String s) {
@@ -78,28 +108,28 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
 
     public DateModel getDate() {
         DateModel md = DateConverter.JalaliToGregorian(Year, Month, Day);
-        return new DateModel(md.getYear(), md.getMonth(), md.getDay());
+        return new DateModel(md.year, md.month, md.day);
     }
 
     public DateModel getFirstDayOfYear() {
         DateModel md = DateConverter.JalaliToGregorian(Year, 1, 1);
-        return new DateModel(md.getYear(), md.getMonth(), md.getDay());
+        return new DateModel(md.year, md.month, md.day);
     }
 
     public DateModel getLastDayOfYear() {
         DateModel md = DateConverter.JalaliToGregorian(Year, 12,
                 DaysInMonth[12] - (!DateConverter.IsJalaliLeap(Year) ? 1 : 0));
-        return new DateModel(md.getYear(), md.getMonth(), md.getDay(), 23, 59, 59);
+        return new DateModel(md.year, md.month, md.day, 23, 59, 59);
     }
 
     public DateModel getFirstDayOfMonth() {
         DateModel md = DateConverter.JalaliToGregorian(Year, Month, 1);
-        return new DateModel(md.getYear(), md.getMonth(), md.getDay());
+        return new DateModel(md.year, md.month, md.day);
     }
 
     public DateModel getLastDayOfMonth() {
         DateModel md = DateConverter.JalaliToGregorian(Year, Month, DaysInMonth[Month] - (Month == 12 && !DateConverter.IsJalaliLeap(Year) ? 1 : 0));
-        return new DateModel(md.getYear(), md.getMonth(), md.getDay(), 23, 59, 59);
+        return new DateModel(md.year, md.month, md.day, 23, 59, 59);
     }
 
     public DateModel FirstDayOfSeason(Season season) {
@@ -111,7 +141,7 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
         int month = 3 + (season.getValue() - 1) * 3;
         int day = DaysInMonth[month] - (month == 12 && !DateConverter.IsJalaliLeap(Year) ? 1 : 0);
         DateModel md = DateConverter.JalaliToGregorian(Year, month, day);
-        return new DateModel(md.getYear(), md.getMonth(), md.getDay(), 23, 59, 59);
+        return new DateModel(md.year, md.month, md.day, 23, 59, 59);
     }
 
     public Season getSeason() {
@@ -197,6 +227,21 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
         return Day;
     }
 
+    @Override
+    public int getHour() {
+        return Hour;
+    }
+
+    @Override
+    public int getMin() {
+        return Min;
+    }
+
+    @Override
+    public int getSec() {
+        return Sec;
+    }
+
     public int getDays() {
         return DateConverter.JalaliToDays(Year, Month, Day);
     }
@@ -210,11 +255,15 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
     }
 
     public String getToYearMonth() {
-        return String.format("%04d/%02d", Year, Month); //tested
+        return String.format("%04d/%02d", Year, Month);
     }
 
     public String toString() {
-        return String.format("%04d/%02d/%02d", Year, Month, Day); //tested
+        return String.format("%04d/%02d/%02d", Year, Month, Day);
+    }
+
+    public String toLongString() {
+        return String.format("%04d/%02d/%02d/%02d/%02d/%02d", Year, Month, Day, Hour, Min, Sec);
     }
 
     @Override
@@ -248,6 +297,38 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
         hashCode = (hashCode * 397) ^ Month;
         hashCode = (hashCode * 397) ^ Day;
         return hashCode;
+    }
+
+    private static void Validate(DateModel dateModel) {
+        //year
+        if (dateModel.year < 0)
+            throw new IllegalArgumentException("invalid date");
+
+        //month
+        if (dateModel.month < 1 | dateModel.month > 12)
+            throw new IllegalArgumentException("invalid date");
+
+        //day
+        if (DateConverter.IsGregorianLeap(dateModel.year) & dateModel.month == 12) {
+            if (dateModel.day < 1 | dateModel.day > DaysInMonth[dateModel.month] + 1)
+                throw new IllegalArgumentException("invalid date");
+        } else {
+            if (dateModel.day < 1 | dateModel.day > DaysInMonth[dateModel.month])
+                throw new IllegalArgumentException("invalid date");
+        }
+
+        //hour
+        if (dateModel.month < 0 | dateModel.month > 23)
+            throw new IllegalArgumentException("invalid date");
+
+        //min
+        if (dateModel.month < 0 | dateModel.month > 60)
+            throw new IllegalArgumentException("invalid date");
+
+        //sec
+        if (dateModel.month < 0 | dateModel.month > 60)
+            throw new IllegalArgumentException("invalid date");
+
     }
 
 }

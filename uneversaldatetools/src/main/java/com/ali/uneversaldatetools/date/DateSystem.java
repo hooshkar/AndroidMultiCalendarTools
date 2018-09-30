@@ -1,7 +1,6 @@
 package com.ali.uneversaldatetools.date;
 
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
@@ -17,7 +16,7 @@ import java.util.Objects;
  */
 
 //this is struct
-public class DateSystem implements IDate, Comparable<IDate> {
+public class DateSystem implements IDate {
 
     private Calendar Calendar;
     private DateModel Date;
@@ -26,7 +25,7 @@ public class DateSystem implements IDate, Comparable<IDate> {
     public DateSystem(DateModel date, Calendar calendar) {
         Calendar = calendar;
 
-        if (date.getMonth() == 0) throw new IllegalArgumentException("month cant be 0");
+        if (date.month == 0) throw new IllegalArgumentException("month cant be 0");
         switch (Calendar) {
             case Jalali: {
                 Date_SD = new JalaliDateTime(date);
@@ -109,6 +108,21 @@ public class DateSystem implements IDate, Comparable<IDate> {
 
     public int getDay() {
         return Date_SD.getDay();
+    }
+
+    @Override
+    public int getHour() {
+        return Date_SD.getHour();
+    }
+
+    @Override
+    public int getMin() {
+        return Date_SD.getMin();
+    }
+
+    @Override
+    public int getSec() {
+        return Date_SD.getSec();
     }
 
     public int getDays() {
@@ -237,14 +251,14 @@ public class DateSystem implements IDate, Comparable<IDate> {
         return Date_SD.toString();
     }
 
-    @Override
-    public int compareTo(@NonNull IDate o) {
-        return CompareTo(o);
-    }
-
-    public int CompareTo(IDate t2) {
-        return Date.compareTo(t2);
-    }
+//    @Override
+//    public int compareTo(@NonNull IDate o) {
+//        return CompareTo(o);
+//    }
+//
+//    public int CompareTo(IDate t2) {
+//        return Date.compareTo(t2);
+//    }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public boolean equals(DateSystem other) {

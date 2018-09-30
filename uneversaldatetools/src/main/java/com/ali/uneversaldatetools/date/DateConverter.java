@@ -49,14 +49,14 @@ public class DateConverter {
     }
 
 
-    static int JalaliToDays(int year, int month, int day) {
+    public static int JalaliToDays(int year, int month, int day) {
         return day +
                 (month - 1 <= 6 ? (month - 1) * 31 : (month - 1) * 30 + 6) +
                 (year - 1) * 365 +
                 LeapsJalaliBehind(year - 1);
     }
 
-    static int GregorianToDays(int year, int month, int day) {
+    public static int GregorianToDays(int year, int month, int day) {
         int[] monthDays = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
 
         return day +
@@ -66,11 +66,12 @@ public class DateConverter {
                 ((month - 1 >= 2) && IsGregorianLeap(year) ? 1 : 0);
     }
 
-    static int HijriToDays(int year, int month, int day) {
+    public static int HijriToDays(int year, int month, int day) {
         int[] monthDays = {0, 30, 59, 89, 118, 148, 177, 207, 236, 266, 295, 325};
 
         return day + monthDays[month - 1] + (year - 1) * 354 + LeapsHijriBehind(year - 1);
     }
+
 
     static DateModel DaysToJalali(int days) {
 
@@ -486,4 +487,51 @@ public class DateConverter {
         return DaysToGregorian(HijriToDays(year, month, day) + 227014);
     }
 
+
+    public static DateModel UnixToHijri(int sec, int timeZone) {
+        sec += timeZone;
+        DateModel date = DaysToHijri((sec / 86400) + 719163 - 227014);
+        date.sec = sec % 86400;
+        date.hour = date.sec / 3600;
+        date.sec = date.sec % 3600;
+        date.min = date.sec / 60;
+        date.sec = date.sec % 60;
+        return date;
+    }
+
+    public static DateModel UnixToHijri(int sec) {
+        return UnixToHijri(sec, 0);
+    }
+
+    public static DateModel UnixToJalali(int sec, int timeZone) {
+        sec += timeZone;
+        DateModel date = DaysToJalali((sec / 86400) + 719163 - 226895);
+        date.sec = sec % 86400;
+        date.hour = date.sec / 3600;
+        date.sec = date.sec % 3600;
+        date.min = date.sec / 60;
+        date.sec = date.sec % 60;
+        return date;
+    }
+
+    public static DateModel UnixToJalali(int sec) {
+        return UnixToJalali(sec, 0);
+    }
+
+    public static DateModel UnixToGregorian(int sec, int timeZone) {
+        sec += timeZone;
+        DateModel date = DaysToGregorian((sec / 86400) + 719163);
+        date.sec = sec % 86400;
+        date.hour = date.sec / 3600;
+        date.sec = date.sec % 3600;
+        date.min = date.sec / 60;
+        date.sec = date.sec % 60;
+        return date;
+    }
+
+    public static DateModel UnixToGregorian(int sec) {
+        return UnixToGregorian(sec, 0);
+    }
+
+    //todo to unix methods
 }

@@ -14,8 +14,11 @@ public class GregorianDateTime implements IDate, Comparable<GregorianDateTime> {
     private int Year;
     private int Month;
     private int Day;
+    private int Hour;
+    private int Min;
+    private int Sec;
 
-    public static final int[] DaysInMonth = {
+    private static final int[] DaysInMonth = {
             0,
             31,
             29,
@@ -31,23 +34,51 @@ public class GregorianDateTime implements IDate, Comparable<GregorianDateTime> {
             31
     };
 
-    public GregorianDateTime(DateModel dateTime) {
-        Year = dateTime.getYear();
-        Month = dateTime.getMonth();
-        Day = dateTime.getDay();
+    public static GregorianDateTime FromUnixTime(int unixTime) {
+        DateModel dateModel = DateConverter.UnixToGregorian(unixTime);
+        Validate(dateModel);
+        return new GregorianDateTime(dateModel);
+    }
+
+    public GregorianDateTime(DateModel date) {
+
+        Validate(date);
+
+        Year = date.year;
+        Month = date.month;
+        Day = date.day;
+        Hour = date.hour;
+        Min = date.min;
+        Sec = date.sec;
     }
 
     public GregorianDateTime(int year, int month, int day) {
+
+        Validate(new DateModel(year, month, day));
+
         Year = year;
         Month = month;
         Day = day;
     }
 
+    public GregorianDateTime(int year, int month, int day, int hour, int min, int sec) {
+
+        Validate(new DateModel(year, month, day, hour, min, sec));
+
+        Year = year;
+        Month = month;
+        Day = day;
+        Hour = hour;
+        Min = min;
+        Sec = sec;
+    }
+
     public GregorianDateTime(int days) {
         DateModel sd = DateConverter.DaysToGregorian(days);
-        Year = sd.getYear();
-        Month = sd.getMonth();
-        Day = sd.getDay();
+        Validate(sd);
+        Year = sd.year;
+        Month = sd.month;
+        Day = sd.day;
     }
 
     public static GregorianDateTime Parse(String s) {
@@ -189,6 +220,21 @@ public class GregorianDateTime implements IDate, Comparable<GregorianDateTime> {
         return Day;
     }
 
+    @Override
+    public int getHour() {
+        return Hour;
+    }
+
+    @Override
+    public int getMin() {
+        return Min;
+    }
+
+    @Override
+    public int getSec() {
+        return Sec;
+    }
+
     public int getDays() {
         return DateConverter.GregorianToDays(Year, Month, Day);
     }
@@ -207,6 +253,10 @@ public class GregorianDateTime implements IDate, Comparable<GregorianDateTime> {
 
     public String toString() {
         return String.format("%04d/%02d/%02d", Year, Month, Day);
+    }
+
+    public String toLongString() {
+        return String.format("%04d/%02d/%02d/%02d/%02d/%02d", Year, Month, Day, Hour, Min, Sec);
     }
 
     @Override
@@ -240,5 +290,37 @@ public class GregorianDateTime implements IDate, Comparable<GregorianDateTime> {
         hashCode = (hashCode * 397) ^ Month;
         hashCode = (hashCode * 397) ^ Day;
         return hashCode;
+    }
+
+    private static void Validate(DateModel dateModel) {
+        //year
+        if (dateModel.year < 0)
+            throw new IllegalArgumentException("invalid date");
+
+        //month
+        if (dateModel.month < 1 | dateModel.month > 12)
+            throw new IllegalArgumentException("invalid date");
+
+        //day
+        if (DateConverter.IsGregorianLeap(dateModel.year) & dateModel.month == 2) {
+            if (dateModel.day < 1 | dateModel.day > DaysInMonth[dateModel.month] + 1)
+                throw new IllegalArgumentException("invalid date");
+        } else {
+            if (dateModel.day < 1 | dateModel.day > DaysInMonth[dateModel.month])
+                throw new IllegalArgumentException("invalid date");
+        }
+
+        //hour
+        if (dateModel.month < 0 | dateModel.month > 23)
+            throw new IllegalArgumentException("invalid date");
+
+        //min
+        if (dateModel.month < 0 | dateModel.month > 60)
+            throw new IllegalArgumentException("invalid date");
+
+        //sec
+        if (dateModel.month < 0 | dateModel.month > 60)
+            throw new IllegalArgumentException("invalid date");
+
     }
 }

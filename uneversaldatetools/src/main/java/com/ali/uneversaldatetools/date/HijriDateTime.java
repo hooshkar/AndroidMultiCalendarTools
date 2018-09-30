@@ -14,8 +14,11 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
     private int Year;
     private int Month;
     private int Day;
+    private int Hour;
+    private int Min;
+    private int Sec;
 
-    public static final int[] DaysInMonth = {
+    private static final int[] DaysInMonth = {
             0,
             30,
             29,
@@ -31,26 +34,52 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
             30
     };
 
-    public HijriDateTime(DateModel date) {
-        DateModel sd = DateConverter.GregorianToHijri(date.getYear(), date.getMonth(), date.getDay());
+    public static GregorianDateTime FromUnixTime(int unixTime) {
+        DateModel dateModel = DateConverter.UnixToHijri(unixTime);
+        Validate(dateModel);
+        return new GregorianDateTime(dateModel);
+    }
 
-        Year = sd.getYear();
-        Month = sd.getMonth();
-        Day = sd.getDay();
+    public HijriDateTime(DateModel date) {
+        DateModel sd = DateConverter.GregorianToHijri(date.year, date.month, date.day);
+
+        Validate(sd);
+
+        Year = sd.year;
+        Month = sd.month;
+        Day = sd.day;
+        Hour = sd.hour;
+        Min = sd.min;
+        Sec = sd.sec;
     }
 
     public HijriDateTime(int year, int month, int day) {
+
+        Validate(new DateModel(year, month, day));
+
         Year = year;
         Month = month;
         Day = day;
     }
 
+    public HijriDateTime(int year, int month, int day, int hour, int min, int sec) {
+
+        Validate(new DateModel(year, month, day, hour, min, sec));
+
+        Year = year;
+        Month = month;
+        Day = day;
+        Hour = hour;
+        Min = min;
+        Sec = sec;
+    }
+
     public HijriDateTime(int days) {
         DateModel sd = DateConverter.DaysToHijri(days);
-
-        Year = sd.getYear();
-        Month = sd.getMonth();
-        Day = sd.getDay();
+        Validate(sd);
+        Year = sd.year;
+        Month = sd.month;
+        Day = sd.day;
     }
 
     public static HijriDateTime Parse(String date) {
@@ -78,27 +107,27 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
 
     public DateModel getDate() {
         DateModel md = DateConverter.HijriToGregorian(Year, Month, Day);
-        return new DateModel(md.getYear(), md.getMonth(), md.getDay());
+        return new DateModel(md.year, md.month, md.day);
     }
 
     public DateModel getFirstDayOfYear() {
         DateModel md = DateConverter.HijriToGregorian(Year, 1, 1);
-        return new DateModel(md.getYear(), md.getMonth(), md.getDay());
+        return new DateModel(md.year, md.month, md.day);
     }
 
     public DateModel getLastDayOfYear() {
         DateModel md = DateConverter.HijriToGregorian(Year, 12, DaysInMonth[12] - (!DateConverter.IsHijriLeap(Year) ? 1 : 0));
-        return new DateModel(md.getYear(), md.getMonth(), md.getDay(), 23, 59, 59);
+        return new DateModel(md.year, md.month, md.day, 23, 59, 59);
     }
 
     public DateModel getFirstDayOfMonth() {
         DateModel md = DateConverter.HijriToGregorian(Year, Month, 1);
-        return new DateModel(md.getYear(), md.getMonth(), md.getDay());
+        return new DateModel(md.year, md.month, md.day);
     }
 
     public DateModel getLastDayOfMonth() {
         DateModel md = DateConverter.HijriToGregorian(Year, Month, DaysInMonth[Month] - (Month == 12 && !DateConverter.IsHijriLeap(Year) ? 1 : 0));
-        return new DateModel(md.getYear(), md.getMonth(), md.getDay(), 23, 59, 59);
+        return new DateModel(md.year, md.month, md.day, 23, 59, 59);
     }
 
     public DateModel FirstDayOfSeason(Season season) {
@@ -110,7 +139,7 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
                 return mFirstDayOfSeason;
             }
 
-            getDate().setMonth(getDate().getMonth() - 6);
+            getDate().month = getDate().month - 6;
             return new HijriDateTime(getDate()).FirstDayOfSeason(season);
         }
 
@@ -121,7 +150,7 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
             }
         }
 
-        getDate().setMonth(getDate().getMonth() - (firstDayOfSeason.Year < Year ? 6 : -6));
+        getDate().month = getDate().month - (firstDayOfSeason.Year < Year ? 6 : -6);
         return new HijriDateTime(getDate()).FirstDayOfSeason(season);
     }
 
@@ -132,7 +161,7 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
 
 
     public Season getSeason() {
-        switch (getDate().getMonth()) {
+        switch (getDate().month) {
             case 1:
             case 2:
             case 3:
@@ -224,6 +253,20 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
         return Day;
     }
 
+    @Override
+    public int getHour() {
+        return Hour;
+    }
+
+    @Override
+    public int getMin() {
+        return Min;
+    }
+
+    @Override
+    public int getSec() {
+        return Sec;
+    }
 
     public int getDays() {
         return DateConverter.HijriToDays(Year, Month, Day);
@@ -247,6 +290,9 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
         return String.format("%04d/%02d/%02d", Year, Month, Day); //tested
     }
 
+    public String toLongString() {
+        return String.format("%04d/%02d/%02d/%02d/%02d/%02d", Year, Month, Day, Hour, Min, Sec);
+    }
 
     @Override
     public int compareTo(@NonNull HijriDateTime o) {
@@ -280,5 +326,37 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
         hashCode = (hashCode * 397) ^ Month;
         hashCode = (hashCode * 397) ^ Day;
         return hashCode;
+    }
+
+    private static void Validate(DateModel dateModel) {
+        //year
+        if (dateModel.year < 0)
+            throw new IllegalArgumentException("invalid date");
+
+        //month
+        if (dateModel.month < 1 | dateModel.month > 12)
+            throw new IllegalArgumentException("invalid date");
+
+        //day
+        if (DateConverter.IsGregorianLeap(dateModel.year) & dateModel.month == 12) {
+            if (dateModel.day < 1 | dateModel.day > DaysInMonth[dateModel.month] + 1)
+                throw new IllegalArgumentException("invalid date");
+        } else {
+            if (dateModel.day < 1 | dateModel.day > DaysInMonth[dateModel.month])
+                throw new IllegalArgumentException("invalid date");
+        }
+
+        //hour
+        if (dateModel.month < 0 | dateModel.month > 23)
+            throw new IllegalArgumentException("invalid date");
+
+        //min
+        if (dateModel.month < 0 | dateModel.month > 60)
+            throw new IllegalArgumentException("invalid date");
+
+        //sec
+        if (dateModel.month < 0 | dateModel.month > 60)
+            throw new IllegalArgumentException("invalid date");
+
     }
 }
