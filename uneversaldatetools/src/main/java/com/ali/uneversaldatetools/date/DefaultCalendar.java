@@ -6,13 +6,13 @@ package com.ali.uneversaldatetools.date;
 
 public class DefaultCalendar {
 
-    private Calendar defaultCalendar;
+    private static Calendar mDefaultCalendar;
 
-    public Calendar getDefaultCalendar() {
-        return defaultCalendar;
+    public static Calendar getDefaultCalendar() {
+        return mDefaultCalendar;
     }
 
-    public void setDefaultCalendar(Calendar defaultCalendar) {
-        this.defaultCalendar = defaultCalendar;
+    public static void setDefaultCalendar(Calendar DefaultCalendar) {
+        mDefaultCalendar = DefaultCalendar;
     }
 }

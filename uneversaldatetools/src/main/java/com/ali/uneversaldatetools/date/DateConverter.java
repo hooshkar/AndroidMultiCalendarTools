@@ -487,9 +487,9 @@ public class DateConverter {
         return DaysToGregorian(HijriToDays(year, month, day) + 227014);
     }
 
+    //unix time
 
-    public static DateModel UnixToHijri(int sec, int timeZone) {
-        sec += timeZone;
+    public static DateModel UnixToHijri(int sec) {
         DateModel date = DaysToHijri((sec / 86400) + 719163 - 227014);
         date.sec = sec % 86400;
         date.hour = date.sec / 3600;
@@ -499,12 +499,7 @@ public class DateConverter {
         return date;
     }
 
-    public static DateModel UnixToHijri(int sec) {
-        return UnixToHijri(sec, 0);
-    }
-
-    public static DateModel UnixToJalali(int sec, int timeZone) {
-        sec += timeZone;
+    public static DateModel UnixToJalali(int sec) {
         DateModel date = DaysToJalali((sec / 86400) + 719163 - 226895);
         date.sec = sec % 86400;
         date.hour = date.sec / 3600;
@@ -514,12 +509,7 @@ public class DateConverter {
         return date;
     }
 
-    public static DateModel UnixToJalali(int sec) {
-        return UnixToJalali(sec, 0);
-    }
-
-    public static DateModel UnixToGregorian(int sec, int timeZone) {
-        sec += timeZone;
+    public static DateModel UnixToGregorian(int sec) {
         DateModel date = DaysToGregorian((sec / 86400) + 719163);
         date.sec = sec % 86400;
         date.hour = date.sec / 3600;
@@ -529,9 +519,48 @@ public class DateConverter {
         return date;
     }
 
-    public static DateModel UnixToGregorian(int sec) {
-        return UnixToGregorian(sec, 0);
+
+    public static int HijriToUnix(int year, int month, int day, int hour, int min, int sec) {
+
+        int from = 719163; // const : DateConverter.GregorianToDays(1970, 1, 1)
+
+        from -= 227014; // hijri and gregorian deference in days
+
+        int days = HijriToDays(year, month, day);
+
+        int lastDays = ((days - from) * 86400);
+
+        int today = sec + (min * 60) + (hour * 3600);
+
+        return today + lastDays;
+
     }
 
-    //todo to unix methods
+    public static int JalaliToUnix(int year, int month, int day, int hour, int min, int sec) {
+
+        int from = 719163; // const : DateConverter.GregorianToDays(1970, 1, 1)
+
+        from -= 226895; // jalali and gregorian deference in days
+
+        int days = JalaliToDays(year, month, day);
+
+        int lastDays = ((days - from) * 86400);
+
+        int today = sec + (min * 60) + (hour * 3600);
+
+        return today + lastDays;
+    }
+
+    public static int GregorianToUnix(int year, int month, int day, int hour, int min, int sec) {
+
+        int from = 719163; // const -> DateConverter.GregorianToDays(1970, 1, 1)
+
+        int days = GregorianToDays(year, month, day);
+
+        int lastDays = ((days - from) * 86400);
+
+        int today = sec + (min * 60) + (hour * 3600);
+
+        return today + lastDays;
+    }
 }

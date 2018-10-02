@@ -28,15 +28,15 @@ public class DateSystem implements IDate {
         if (date.month == 0) throw new IllegalArgumentException("month cant be 0");
         switch (Calendar) {
             case Jalali: {
-                Date_SD = new JalaliDateTime(date);
+                Date_SD = new JalaliDateTime(date.year, date.month, date.day, date.hour, date.min, date.sec, TimeZoneHelper.getSystemTimeZone());
                 break;
             }
             case Gregorian: {
-                Date_SD = new GregorianDateTime(date);
+                Date_SD = new GregorianDateTime(date.year, date.month, date.day, date.hour, date.min, date.sec, TimeZoneHelper.getSystemTimeZone());
                 break;
             }
             case Hijri: {
-                Date_SD = new HijriDateTime(date);
+                Date_SD = new HijriDateTime(date.year, date.month, date.day, date.hour, date.min, date.sec, TimeZoneHelper.getSystemTimeZone());
                 break;
             }
             default: {
@@ -274,8 +274,7 @@ public class DateSystem implements IDate {
         return (Calendar.getValue() * 397) ^ (Date_SD.hashCode());
     }
 
-    public long getUnixTime() {
-        long from = DateConverter.GregorianToDays(1970, 1, 1);
-        return (getGregorianDateTime().getDays() - from) * 86400;
+    public int toUnixTime() {
+        return Date_SD.toUnixTime();
     }
 }

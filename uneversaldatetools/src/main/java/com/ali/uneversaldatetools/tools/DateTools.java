@@ -16,4 +16,8 @@ public class DateTools {
         date.setMonth(date.getMonth() + 1);  // change index to 1
         return new DateModel(date.getYear(), date.getMonth(), date.getDate());
     }
+
+    public static int getCurrentUnixTime() {
+        return (int) (System.currentTimeMillis() / 1000L);
+    }
 }

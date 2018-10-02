@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         Button getTime = findViewById(R.id.btn_get_time);
         TextView timeView = findViewById(R.id.text_time_show);
 
-        a.ShowDatePicker(getSupportFragmentManager(), Calendar.Jalali);
+        a.ShowDatePicker(getSupportFragmentManager(), Calendar.Hijri);
         a.setOnDateSelected((dateSystem, unixTime) -> {
             timeView.setText("unix time is: " + unixTime);
             timeView.append("\ndate is: " + dateSystem);

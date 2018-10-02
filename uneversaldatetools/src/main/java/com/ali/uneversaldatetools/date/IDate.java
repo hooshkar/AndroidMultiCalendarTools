@@ -61,4 +61,6 @@ public interface IDate {
     String getYearMonthLetters();
 
     String getToYearMonth();
+
+    int toUnixTime();
 }

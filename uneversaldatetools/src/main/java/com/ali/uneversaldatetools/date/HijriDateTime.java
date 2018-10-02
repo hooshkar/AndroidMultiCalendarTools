@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import com.ali.uneversaldatetools.model.DateModel;
 import com.ali.uneversaldatetools.tools.DateTools;
 
+import java.util.TimeZone;
+
 /**
  * Created by ali on 9/5/18.
  */
@@ -17,8 +19,9 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
     private int Hour;
     private int Min;
     private int Sec;
+    private TimeZone TimeZone;
 
-    private static final int[] DaysInMonth = {
+    public static final int[] DaysInMonth = {
             0,
             30,
             29,
@@ -34,53 +37,53 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
             30
     };
 
-    public static GregorianDateTime FromUnixTime(int unixTime) {
-        DateModel dateModel = DateConverter.UnixToHijri(unixTime);
-        Validate(dateModel);
-        return new GregorianDateTime(dateModel);
-    }
-
-    public HijriDateTime(DateModel date) {
-        DateModel sd = DateConverter.GregorianToHijri(date.year, date.month, date.day);
-
-        Validate(sd);
-
-        Year = sd.year;
-        Month = sd.month;
-        Day = sd.day;
-        Hour = sd.hour;
-        Min = sd.min;
-        Sec = sd.sec;
-    }
-
     public HijriDateTime(int year, int month, int day) {
-
-        Validate(new DateModel(year, month, day));
-
+        DateValidation.HijriValidate(year, month, day, 0, 0, 0);
         Year = year;
         Month = month;
         Day = day;
+        TimeZone = TimeZoneHelper.getSystemTimeZone();
     }
 
-    public HijriDateTime(int year, int month, int day, int hour, int min, int sec) {
-
-        Validate(new DateModel(year, month, day, hour, min, sec));
-
-        Year = year;
-        Month = month;
-        Day = day;
+    public HijriDateTime(int year, int month, int day, int hour, int min, int sec, TimeZone timeZone) {
+        this(year, month, day);
+        DateValidation.HijriValidate(year, month, day, hour, min, sec);
         Hour = hour;
         Min = min;
         Sec = sec;
+        TimeZone = timeZone;
     }
 
     public HijriDateTime(int days) {
         DateModel sd = DateConverter.DaysToHijri(days);
-        Validate(sd);
         Year = sd.year;
         Month = sd.month;
         Day = sd.day;
+        TimeZone = TimeZoneHelper.getSystemTimeZone();
     }
+
+    public HijriDateTime(int days, int hour, int min, int sec, TimeZone timeZone) {
+        this(days);
+        Hour = hour;
+        Min = min;
+        Sec = sec;
+        TimeZone = timeZone;
+    }
+
+    public HijriDateTime(int unixTimeSeconds, TimeZone timeZone) {
+
+        int offset = TimeZoneHelper.ToSeconds(timeZone);
+
+        DateModel dateModel = DateConverter.UnixToHijri(unixTimeSeconds + offset);
+        Year = dateModel.year;
+        Month = dateModel.month;
+        Day = dateModel.day;
+        Hour = dateModel.hour;
+        Min = dateModel.min;
+        Sec = dateModel.sec;
+        TimeZone = timeZone;
+    }
+
 
     public static HijriDateTime Parse(String date) {
         int y = Integer.valueOf(date.substring(0, 4));
@@ -102,7 +105,8 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
     }
 
     public static HijriDateTime Now() {
-        return new HijriDateTime(DateTools.getCurrentDate());
+        DateModel d = DateTools.getCurrentDate();
+        return new HijriDateTime(d.year, d.month, d.day, d.hour, d.min, d.sec, TimeZoneHelper.getSystemTimeZone());
     }
 
     public DateModel getDate() {
@@ -131,8 +135,9 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
     }
 
     public DateModel FirstDayOfSeason(Season season) {
-        DateModel mFirstDayOfSeason = new GregorianDateTime(getDate()).FirstDayOfSeason(season);
-        HijriDateTime firstDayOfSeason = new HijriDateTime(mFirstDayOfSeason);
+        DateModel d = getDate();
+        DateModel mFirstDayOfSeason = new GregorianDateTime(d.year, d.month, d.day).FirstDayOfSeason(season);
+        HijriDateTime firstDayOfSeason = new HijriDateTime(mFirstDayOfSeason.year, mFirstDayOfSeason.month, mFirstDayOfSeason.day);
 
         if (firstDayOfSeason.Year == Year) {
             if (firstDayOfSeason.Month < 11 || firstDayOfSeason.Month == 11 && firstDayOfSeason.Day <= 15) {
@@ -140,7 +145,7 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
             }
 
             getDate().month = getDate().month - 6;
-            return new HijriDateTime(getDate()).FirstDayOfSeason(season);
+            return new HijriDateTime(d.year, d.month, d.day).FirstDayOfSeason(season);
         }
 
 
@@ -151,12 +156,13 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
         }
 
         getDate().month = getDate().month - (firstDayOfSeason.Year < Year ? 6 : -6);
-        return new HijriDateTime(getDate()).FirstDayOfSeason(season);
+        return new HijriDateTime(d.year, d.month, d.day).FirstDayOfSeason(season);
     }
 
 
     public DateModel LastDayOfSeason(Season season) {
-        return new GregorianDateTime(FirstDayOfSeason(season)).LastDayOfSeason(season);
+        DateModel d = FirstDayOfSeason(season);
+        return new GregorianDateTime(d.year, d.month, d.day, d.hour, d.min, d.sec, TimeZone).LastDayOfSeason(season);
     }
 
 
@@ -210,12 +216,14 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
 
 
     public JalaliDateTime getJalaliDateTime() {
-        return new JalaliDateTime(getDate());
+        DateModel d = getDate();
+        return new JalaliDateTime(d.year, d.month, d.day, d.hour, d.min, d.sec, TimeZone);
     }
 
 
     public GregorianDateTime getGregorianDateTime() {
-        return new GregorianDateTime(getDate());
+        DateModel d = getDate();
+        return new GregorianDateTime(d.year, d.month, d.day, d.hour, d.min, d.sec, TimeZone);
     }
 
 
@@ -283,15 +291,15 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
 
 
     public String getToYearMonth() {
-        return String.format("%04d/%02d", Year, Month); //tested
+        return String.format("%04d/%02d " + TimeZone.getDisplayName(), Year, Month); //tested
     }
 
     public String toString() {
-        return String.format("%04d/%02d/%02d", Year, Month, Day); //tested
+        return String.format("%04d/%02d/%02d " + TimeZone.getDisplayName(), Year, Month, Day); //tested
     }
 
     public String toLongString() {
-        return String.format("%04d/%02d/%02d/%02d/%02d/%02d", Year, Month, Day, Hour, Min, Sec);
+        return String.format("%04d/%02d/%02d %02d:%02d:%02d " + TimeZone.getDisplayName(), Year, Month, Day, Hour, Min, Sec);
     }
 
     @Override
@@ -328,35 +336,8 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
         return hashCode;
     }
 
-    private static void Validate(DateModel dateModel) {
-        //year
-        if (dateModel.year < 0)
-            throw new IllegalArgumentException("invalid date");
-
-        //month
-        if (dateModel.month < 1 | dateModel.month > 12)
-            throw new IllegalArgumentException("invalid date");
-
-        //day
-        if (DateConverter.IsGregorianLeap(dateModel.year) & dateModel.month == 12) {
-            if (dateModel.day < 1 | dateModel.day > DaysInMonth[dateModel.month] + 1)
-                throw new IllegalArgumentException("invalid date");
-        } else {
-            if (dateModel.day < 1 | dateModel.day > DaysInMonth[dateModel.month])
-                throw new IllegalArgumentException("invalid date");
-        }
-
-        //hour
-        if (dateModel.month < 0 | dateModel.month > 23)
-            throw new IllegalArgumentException("invalid date");
-
-        //min
-        if (dateModel.month < 0 | dateModel.month > 60)
-            throw new IllegalArgumentException("invalid date");
-
-        //sec
-        if (dateModel.month < 0 | dateModel.month > 60)
-            throw new IllegalArgumentException("invalid date");
-
+    @Override
+    public int toUnixTime() {
+        return DateConverter.HijriToUnix(Year, Month, Day, Hour, Min, Sec) - TimeZoneHelper.ToSeconds(TimeZone);
     }
 }

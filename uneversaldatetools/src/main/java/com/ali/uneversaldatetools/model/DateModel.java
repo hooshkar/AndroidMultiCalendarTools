@@ -27,5 +27,4 @@ public class DateModel  {
         this.min = min;
         this.sec = sec;
     }
-
 }

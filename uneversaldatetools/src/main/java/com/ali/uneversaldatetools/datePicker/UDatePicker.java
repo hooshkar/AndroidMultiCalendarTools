@@ -280,10 +280,10 @@ public class UDatePicker
      * you can show message like "plz select day"
      */
     @Nullable
-    public Long getSelectedUnixTime() {
+    public Integer getSelectedUnixTime() {
         DateSystem dateSystem = getSelectedDate();
         if (dateSystem == null) return null;
-        else return dateSystem.getUnixTime();
+        else return dateSystem.toUnixTime();
     }
 
     private void SetupDayOfWeek() {
@@ -367,7 +367,7 @@ public class UDatePicker
 
         if (listener != null) {
             DateSystem dateSystem = new DateSystem(mDateSystem.getYear(), monthPos, day, mDateSystem.getCalendar());
-            listener.onDateChange(dateSystem, dateSystem.getUnixTime());
+            listener.onDateChange(dateSystem, dateSystem.toUnixTime());
         }
     }
 

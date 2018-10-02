@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import com.ali.uneversaldatetools.model.DateModel;
 import com.ali.uneversaldatetools.tools.DateTools;
 
+import java.util.TimeZone;
+
 /**
  * Created by ali on 9/5/18.
  */
@@ -17,9 +19,9 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
     private int Hour;
     private int Min;
     private int Sec;
+    private TimeZone TimeZone;
 
-
-    private static final int[] DaysInMonth = {
+    public static final int[] DaysInMonth = {
             0,
             31,
             31,
@@ -35,44 +37,25 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
             30
     };
 
-    public static GregorianDateTime FromUnixTime(int unixTime) {
-        DateModel dateModel = DateConverter.UnixToJalali(unixTime);
-        Validate(dateModel);
-        return new GregorianDateTime(dateModel);
-    }
-
-    public JalaliDateTime(DateModel dateTime) {
-        DateModel sd = DateConverter.GregorianToJalali(dateTime.year, dateTime.month, dateTime.day);
-
-        Validate(sd);
-
-        Year = sd.year;
-        Month = sd.month;
-        Day = sd.day;
-        Hour = sd.hour;
-        Min = sd.min;
-        Sec = sd.sec;
-    }
-
     public JalaliDateTime(int year, int month, int day) {
 
-        Validate(new DateModel(year, month, day));
+        DateValidation.JalaliValidate(year, month, day, 0, 0, 0);
 
         Year = year;
         Month = month;
         Day = day;
+
+        TimeZone = TimeZoneHelper.getSystemTimeZone();
     }
 
-    public JalaliDateTime(int year, int month, int day, int hour, int min, int sec) {
+    public JalaliDateTime(int year, int month, int day, int hour, int min, int sec, TimeZone timeZone) {
 
-        Validate(new DateModel(year, month, day,hour,min,sec));
-
-        Year = year;
-        Month = month;
-        Day = day;
+        this(year, month, day);
+        DateValidation.JalaliValidate(year, month, day, hour, min, sec);
         Hour = hour;
         Min = min;
         Sec = sec;
+        TimeZone = timeZone;
     }
 
     public JalaliDateTime(int days) {
@@ -81,7 +64,31 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
         Year = sd.year;
         Month = sd.month;
         Day = sd.day;
+        TimeZone = TimeZoneHelper.getSystemTimeZone();
     }
+
+    public JalaliDateTime(int days, int hour, int min, int sec, TimeZone timeZone) {
+        this(days);
+        Hour = hour;
+        Min = min;
+        Sec = sec;
+        TimeZone = timeZone;
+    }
+
+    public JalaliDateTime(int unixTimeSeconds, TimeZone timeZone) {
+
+        int offset = TimeZoneHelper.ToSeconds(timeZone);
+
+        DateModel dateModel = DateConverter.UnixToJalali(unixTimeSeconds + offset);
+        Year = dateModel.year;
+        Month = dateModel.month;
+        Day = dateModel.day;
+        Hour = dateModel.hour;
+        Min = dateModel.min;
+        Sec = dateModel.sec;
+        TimeZone = timeZone;
+    }
+
 
     public static JalaliDateTime Parse(String s) {
         int y = Integer.valueOf(s.substring(0, 4));
@@ -103,7 +110,9 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
     }
 
     public static JalaliDateTime Now() {
-        return new JalaliDateTime(DateTools.getCurrentDate());
+        DateModel crnt = DateTools.getCurrentDate();
+        DateConverter.GregorianToJalali(crnt.year, crnt.month, crnt.day);
+        return new JalaliDateTime(crnt.year, crnt.month, crnt.day, crnt.hour, crnt.min, crnt.sec, TimeZoneHelper.getSystemTimeZone());
     }
 
     public DateModel getDate() {
@@ -194,11 +203,13 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
     }
 
     public GregorianDateTime getGregorianDateTime() {
-        return new GregorianDateTime(getDate());
+        DateModel dateModel = getDate();
+        return new GregorianDateTime(dateModel.year, dateModel.month, dateModel.day, dateModel.hour, dateModel.min, dateModel.sec, TimeZoneHelper.getSystemTimeZone());
     }
 
     public HijriDateTime getHijriDateTime() {
-        return new HijriDateTime(getDate());
+        DateModel d = getDate();
+        return new HijriDateTime(d.year, d.month, d.day, d.hour, d.min, d.sec, TimeZone);
     }
 
     public String getLetters() {
@@ -255,15 +266,15 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
     }
 
     public String getToYearMonth() {
-        return String.format("%04d/%02d", Year, Month);
+        return String.format("%04d/%02d " + TimeZone.getDisplayName(), Year, Month);
     }
 
     public String toString() {
-        return String.format("%04d/%02d/%02d", Year, Month, Day);
+        return String.format("%04d/%02d/%02d " + TimeZone.getDisplayName(), Year, Month, Day);
     }
 
     public String toLongString() {
-        return String.format("%04d/%02d/%02d/%02d/%02d/%02d", Year, Month, Day, Hour, Min, Sec);
+        return String.format("%04d/%02d/%02d %02d:%02d:%02d " + TimeZone.getDisplayName(), Year, Month, Day, Hour, Min, Sec);
     }
 
     @Override
@@ -299,36 +310,8 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
         return hashCode;
     }
 
-    private static void Validate(DateModel dateModel) {
-        //year
-        if (dateModel.year < 0)
-            throw new IllegalArgumentException("invalid date");
-
-        //month
-        if (dateModel.month < 1 | dateModel.month > 12)
-            throw new IllegalArgumentException("invalid date");
-
-        //day
-        if (DateConverter.IsGregorianLeap(dateModel.year) & dateModel.month == 12) {
-            if (dateModel.day < 1 | dateModel.day > DaysInMonth[dateModel.month] + 1)
-                throw new IllegalArgumentException("invalid date");
-        } else {
-            if (dateModel.day < 1 | dateModel.day > DaysInMonth[dateModel.month])
-                throw new IllegalArgumentException("invalid date");
-        }
-
-        //hour
-        if (dateModel.month < 0 | dateModel.month > 23)
-            throw new IllegalArgumentException("invalid date");
-
-        //min
-        if (dateModel.month < 0 | dateModel.month > 60)
-            throw new IllegalArgumentException("invalid date");
-
-        //sec
-        if (dateModel.month < 0 | dateModel.month > 60)
-            throw new IllegalArgumentException("invalid date");
-
+    @Override
+    public int toUnixTime() {
+        return DateConverter.JalaliToUnix(Year, Month, Day, Hour, Min, Sec) - TimeZoneHelper.ToSeconds(TimeZone);
     }
-
 }

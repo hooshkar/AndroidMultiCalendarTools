@@ -9,21 +9,15 @@ import java.util.TimeZone;
 
 public class TimeZoneHelper {
 
-    public static TimeZone getCurrentTimeZone() {
+    public static TimeZone getSystemTimeZone() {
         return TimeZone.getDefault();
     }
 
-    /**
-     * @return in minute
-     */
-    public static int getCurrentTimeZoneOffset() {
-        return getCurrentTimeZone().getOffset(new Date().getTime()) / 1000 / 60;   //210 minute for iran
+    public static int getSystemOffsetSeconds() {
+        return (getSystemTimeZone().getOffset(new Date().getTime()) / 1000 / 60) * 60;
     }
 
-    /**
-     * @return in second
-     */
-    public static int getCurrentTimeZoneOffsetSec() {
-        return (getCurrentTimeZoneOffset()) * 60;   //to second
+    public static int ToSeconds(TimeZone timeZone){
+        return (timeZone.getOffset(new Date().getTime()) / 1000 / 60) * 60;
     }
 }
