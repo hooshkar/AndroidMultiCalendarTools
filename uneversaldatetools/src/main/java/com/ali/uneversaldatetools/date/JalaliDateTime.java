@@ -3,7 +3,7 @@ package com.ali.uneversaldatetools.date;
 import android.support.annotation.NonNull;
 
 import com.ali.uneversaldatetools.model.DateModel;
-import com.ali.uneversaldatetools.tools.DateTools;
+import com.ali.uneversaldatetools.tools.UnixTimeTools;
 
 import java.util.TimeZone;
 
@@ -21,7 +21,7 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
     private int Sec;
     private TimeZone TimeZone;
 
-    public static final int[] DaysInMonth = {
+    static final int[] DaysInMonth = {
             0,
             31,
             31,
@@ -110,9 +110,7 @@ public class JalaliDateTime implements IDate, Comparable<JalaliDateTime> {
     }
 
     public static JalaliDateTime Now() {
-        DateModel crnt = DateTools.getCurrentDate();
-        DateConverter.GregorianToJalali(crnt.year, crnt.month, crnt.day);
-        return new JalaliDateTime(crnt.year, crnt.month, crnt.day, crnt.hour, crnt.min, crnt.sec, TimeZoneHelper.getSystemTimeZone());
+        return new JalaliDateTime(UnixTimeTools.getCurrentUnixTime(), TimeZoneHelper.getSystemTimeZone());
     }
 
     public DateModel getDate() {

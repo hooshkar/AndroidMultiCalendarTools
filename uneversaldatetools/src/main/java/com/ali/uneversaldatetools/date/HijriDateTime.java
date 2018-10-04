@@ -3,7 +3,7 @@ package com.ali.uneversaldatetools.date;
 import android.support.annotation.NonNull;
 
 import com.ali.uneversaldatetools.model.DateModel;
-import com.ali.uneversaldatetools.tools.DateTools;
+import com.ali.uneversaldatetools.tools.UnixTimeTools;
 
 import java.util.TimeZone;
 
@@ -21,7 +21,7 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
     private int Sec;
     private TimeZone TimeZone;
 
-    public static final int[] DaysInMonth = {
+    static final int[] DaysInMonth = {
             0,
             30,
             29,
@@ -105,8 +105,7 @@ public class HijriDateTime implements IDate, Comparable<HijriDateTime> {
     }
 
     public static HijriDateTime Now() {
-        DateModel d = DateTools.getCurrentDate();
-        return new HijriDateTime(d.year, d.month, d.day, d.hour, d.min, d.sec, TimeZoneHelper.getSystemTimeZone());
+        return new HijriDateTime(UnixTimeTools.getCurrentUnixTime(), TimeZoneHelper.getSystemTimeZone());
     }
 
     public DateModel getDate() {

@@ -6,70 +6,96 @@ import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.ali.uneversaldatetools.model.DateModel;
-import com.ali.uneversaldatetools.tools.DateTools;
+import com.ali.uneversaldatetools.tools.UnixTimeTools;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.TimeZone;
 
 /**
  * Created by ali on 9/5/18.
  */
 
-//this is struct
 public class DateSystem implements IDate {
 
     private Calendar Calendar;
     private DateModel Date;
     private IDate Date_SD;
 
-    public DateSystem(DateModel date, Calendar calendar) {
-        Calendar = calendar;
-
-        if (date.month == 0) throw new IllegalArgumentException("month cant be 0");
-        switch (Calendar) {
-            case Jalali: {
-                Date_SD = new JalaliDateTime(date.year, date.month, date.day, date.hour, date.min, date.sec, TimeZoneHelper.getSystemTimeZone());
-                break;
-            }
-            case Gregorian: {
-                Date_SD = new GregorianDateTime(date.year, date.month, date.day, date.hour, date.min, date.sec, TimeZoneHelper.getSystemTimeZone());
-                break;
-            }
-            case Hijri: {
-                Date_SD = new HijriDateTime(date.year, date.month, date.day, date.hour, date.min, date.sec, TimeZoneHelper.getSystemTimeZone());
-                break;
-            }
-            default: {
-                throw new RuntimeException("Invalid Calendar Type!");
-            }
-        }
-
-        Date = date;
-    }
-
     public DateSystem(int year, int month, int day, Calendar calendar) {
         Calendar = calendar;
 
         Log.d("month: ", String.valueOf(month));
         if (month > 12) month -= 12;
-        else if (month < 1) month += 12;
 
         switch (Calendar) {
-            case Jalali: {
+
+            case Jalali:
                 Date_SD = new JalaliDateTime(year, month, day);
                 break;
-            }
-            case Gregorian: {
+
+            case Gregorian:
                 Date_SD = new GregorianDateTime(year, month, day);
                 break;
-            }
-            case Hijri: {
+
+            case Hijri:
                 Date_SD = new HijriDateTime(year, month, day);
                 break;
-            }
-            default: {
+
+            default:
                 throw new RuntimeException("Invalid Calendar Type!");
-            }
+
+        }
+        Date = Date_SD.getDate();
+    }
+
+    public DateSystem(int year, int month, int day, int hour, int min, int sec, TimeZone timeZone, Calendar calendar) {
+        Calendar = calendar;
+
+        Log.d("month: ", String.valueOf(month));
+        if (month > 12) month -= 12;
+
+        switch (Calendar) {
+
+            case Jalali:
+                Date_SD = new JalaliDateTime(year, month, day, hour, min, sec, timeZone);
+                break;
+
+            case Gregorian:
+                Date_SD = new GregorianDateTime(year, month, day, hour, min, sec, timeZone);
+                break;
+
+            case Hijri:
+                Date_SD = new HijriDateTime(year, month, day, hour, min, sec, timeZone);
+                break;
+
+            default:
+                throw new RuntimeException("Invalid Calendar Type!");
+
+        }
+        Date = Date_SD.getDate();
+    }
+
+    public DateSystem(int unixTime, TimeZone timeZone, Calendar calendar) {
+        Calendar = calendar;
+
+        switch (Calendar) {
+
+            case Jalali:
+                Date_SD = new JalaliDateTime(unixTime, timeZone);
+                break;
+
+            case Gregorian:
+                Date_SD = new GregorianDateTime(unixTime, timeZone);
+                break;
+
+            case Hijri:
+                Date_SD = new HijriDateTime(unixTime, timeZone);
+                break;
+
+            default:
+                throw new RuntimeException("Invalid Calendar Type!");
+
         }
         Date = Date_SD.getDate();
     }
@@ -189,20 +215,23 @@ public class DateSystem implements IDate {
         return Date_SD.AddDays(days);
     }
 
-    public static DateSystem Now(Calendar calendar) {
-        return new DateSystem(DateTools.getCurrentDate(), calendar);
+    public static DateSystem Now(TimeZone timeZone, Calendar calendar) {
+        return new DateSystem(UnixTimeTools.getCurrentUnixTime(), timeZone, calendar);
     }
 
     public static DateSystem Parse(String date, Calendar calendar) {
         switch (calendar) {
             case Jalali: {
-                return new DateSystem(JalaliDateTime.Parse(date).getDate(), calendar);
+                DateModel d = JalaliDateTime.Parse(date).getDate();
+                return new DateSystem(d.year, d.month, d.day, d.hour, d.min, d.sec, TimeZoneHelper.getSystemTimeZone(), calendar);
             }
             case Gregorian: {
-                return new DateSystem(GregorianDateTime.Parse(date).getDate(), calendar);
+                DateModel d = GregorianDateTime.Parse(date).getDate();
+                return new DateSystem(d.year, d.month, d.day, d.hour, d.min, d.sec, TimeZoneHelper.getSystemTimeZone(), calendar);
             }
             case Hijri: {
-                return new DateSystem(HijriDateTime.Parse(date).getDate(), calendar);
+                DateModel d = HijriDateTime.Parse(date).getDate();
+                return new DateSystem(d.year, d.month, d.day, d.hour, d.min, d.sec, TimeZoneHelper.getSystemTimeZone(), calendar);
             }
             default: {
                 throw new RuntimeException("Invalid Calendar Type!");
@@ -213,13 +242,16 @@ public class DateSystem implements IDate {
     public static DateSystem Parse(String yearMonth, int day, Calendar calendar) {
         switch (calendar) {
             case Jalali: {
-                return new DateSystem(JalaliDateTime.Parse(yearMonth, day).getDate(), calendar);
+                DateModel d = JalaliDateTime.Parse(yearMonth, day).getDate();
+                return new DateSystem(d.year, d.month, d.day, d.hour, d.min, d.sec, TimeZoneHelper.getSystemTimeZone(), calendar);
             }
             case Gregorian: {
-                return new DateSystem(GregorianDateTime.Parse(yearMonth, day).getDate(), calendar);
+                DateModel d = GregorianDateTime.Parse(yearMonth, day).getDate();
+                return new DateSystem(d.year, d.month, d.day, d.hour, d.min, d.sec, TimeZoneHelper.getSystemTimeZone(), calendar);
             }
             case Hijri: {
-                return new DateSystem(HijriDateTime.Parse(yearMonth, day).getDate(), calendar);
+                DateModel d = HijriDateTime.Parse(yearMonth, day).getDate();
+                return new DateSystem(d.year, d.month, d.day, d.hour, d.min, d.sec, TimeZoneHelper.getSystemTimeZone(), calendar);
             }
             default: {
                 throw new RuntimeException("Invalid Calendar Type!");

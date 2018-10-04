@@ -6,7 +6,7 @@ import com.ali.uneversaldatetools.date.HijriDateTime;
 import com.ali.uneversaldatetools.date.JalaliDateTime;
 import com.ali.uneversaldatetools.date.TimeZoneHelper;
 import com.ali.uneversaldatetools.model.DateModel;
-import com.ali.uneversaldatetools.tools.DateTools;
+import com.ali.uneversaldatetools.tools.UnixTimeTools;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,7 +37,7 @@ public class ExampleUnitTest {
 
     @Test
     public void UnixTest() {
-        int unixTime = DateTools.getCurrentUnixTime();
+        int unixTime = UnixTimeTools.getCurrentUnixTime();
 
         Log(unixTime);
         DateModel dateModel = DateConverter.UnixToJalali(unixTime);

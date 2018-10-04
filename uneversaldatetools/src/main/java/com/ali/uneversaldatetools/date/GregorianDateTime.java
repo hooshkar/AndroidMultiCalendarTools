@@ -3,7 +3,7 @@ package com.ali.uneversaldatetools.date;
 import android.support.annotation.NonNull;
 
 import com.ali.uneversaldatetools.model.DateModel;
-import com.ali.uneversaldatetools.tools.DateTools;
+import com.ali.uneversaldatetools.tools.UnixTimeTools;
 
 import java.util.TimeZone;
 
@@ -21,7 +21,7 @@ public class GregorianDateTime implements IDate, Comparable<GregorianDateTime> {
     private int Sec;
     private TimeZone TimeZone;
 
-    public static final int[] DaysInMonth = {
+    static final int[] DaysInMonth = {
             0,
             31,
             29,
@@ -105,8 +105,7 @@ public class GregorianDateTime implements IDate, Comparable<GregorianDateTime> {
     }
 
     public static GregorianDateTime Now() {
-        DateModel crnt = DateTools.getCurrentDate();
-        return new GregorianDateTime(crnt.year, crnt.month, crnt.day, crnt.hour, crnt.min, crnt.sec, TimeZoneHelper.getSystemTimeZone());
+        return new GregorianDateTime(UnixTimeTools.getCurrentUnixTime(), TimeZoneHelper.getSystemTimeZone());
     }
 
 

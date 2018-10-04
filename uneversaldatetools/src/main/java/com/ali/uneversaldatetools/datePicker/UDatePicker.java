@@ -21,11 +21,12 @@ import android.widget.TextView;
 import com.ali.uneversaldatetools.R;
 import com.ali.uneversaldatetools.date.Calendar;
 import com.ali.uneversaldatetools.date.DateSystem;
+import com.ali.uneversaldatetools.date.TimeZoneHelper;
 import com.ali.uneversaldatetools.model.Month;
 import com.ali.uneversaldatetools.tools.Convert;
-import com.ali.uneversaldatetools.tools.DateTools;
 import com.ali.uneversaldatetools.tools.ExpandAndCollapseAnimation;
 import com.ali.uneversaldatetools.tools.StringGenerator;
+import com.ali.uneversaldatetools.tools.UnixTimeTools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +89,7 @@ public class UDatePicker
     }
 
     public void ShowDatePicker(FragmentManager appCompatActivity, Calendar calendar) {
-        DateSystem defaultDate = new DateSystem(DateTools.getCurrentDate(), calendar); // now
+        DateSystem defaultDate = new DateSystem(UnixTimeTools.getCurrentUnixTime(), TimeZoneHelper.getSystemTimeZone(), calendar); // now
         ShowDatePicker(appCompatActivity, defaultDate);
     }
 
@@ -378,12 +379,12 @@ public class UDatePicker
 
     @Override
     public int currentMonthProvider() {
-        return new DateSystem(DateTools.getCurrentDate(), mDateSystem.getCalendar()).getMonth();
+        return new DateSystem(UnixTimeTools.getCurrentUnixTime(), TimeZoneHelper.getSystemTimeZone(), mDateSystem.getCalendar()).getMonth();
     }
 
     @Override
     public int currentDayProvider() {
-        return new DateSystem(DateTools.getCurrentDate(), mDateSystem.getCalendar()).getDay();
+        return new DateSystem(UnixTimeTools.getCurrentUnixTime(), TimeZoneHelper.getSystemTimeZone(), mDateSystem.getCalendar()).getDay();
     }
 
 
