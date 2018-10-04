@@ -52,10 +52,5 @@ uDatePicker.getSelectedDate();//as a DateSystem object
 and its easy to add new language see
 [here](https://github.com/hooshkar/AndroidMultiCalenderTools/wiki/language).
 
-# Todo
-- [x] fix year picker
-- [ ] add dialog mode
-- [x] make jar
-
 # LICENCE
 under [MIT](https://github.com/hooshkar/AndroidMultiCalenderTools/blob/master/LICENSE) licence
