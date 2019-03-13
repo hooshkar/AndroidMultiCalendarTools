@@ -355,13 +355,22 @@ public class UDatePicker
 
         //this part is because last and next viewpager views render before scroll
         try {
-            ((CalenderViewFragment) mViewPagerAdapter.getItem(mDateSystem.getMonth() - 2)).Render();
+            try {
+                ((CalenderViewFragment) mViewPagerAdapter.getItem(mDateSystem.getMonth() - 2)).Render();
+            } catch (RuntimeException e) {
+                Log.d("something bad happened", e.getMessage());
+            }
+
         } catch (ArrayIndexOutOfBoundsException e) {
             //whe we are in first pos (have no last pos)
         }
 
         try {
-            ((CalenderViewFragment) mViewPagerAdapter.getItem(mDateSystem.getMonth())).Render();
+            try {
+                ((CalenderViewFragment) mViewPagerAdapter.getItem(mDateSystem.getMonth())).Render();
+            } catch (RuntimeException e) {
+                Log.d("something bad happened", e.getMessage());
+            }
         } catch (IndexOutOfBoundsException e) {
             //whe we are in last pos (have no next pos)
         }

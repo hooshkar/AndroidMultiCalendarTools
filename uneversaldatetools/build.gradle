@@ -23,21 +23,13 @@ android {
     }
     productFlavors {
     }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
 }
-
-// for make .jar file
-//task deleteJar(type: Delete) {
-//    delete 'libs/jars/universalDateTools.jar'
-//}
-//
-//task createJar(type: Copy) {
-//    from('build/intermediates/bundles/release/')
-//    into('libs/jars/')
-//    include('classes.jar')
-//    rename('classes.jar', 'universalDateTools.jar')
-//}
-//
-//createJar.dependsOn(deleteJar, build)
 
 
 dependencies {

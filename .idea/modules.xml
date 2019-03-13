@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AndroidMultiCalenderTools.iml" filepath="$PROJECT_DIR$/AndroidMultiCalenderTools.iml" />
-      <module fileurl="file://$PROJECT_DIR$/UniversalDateTools.iml" filepath="$PROJECT_DIR$/UniversalDateTools.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/uneversaldatetools/uneversaldatetools.iml" filepath="$PROJECT_DIR$/uneversaldatetools/uneversaldatetools.iml" />
     </modules>
