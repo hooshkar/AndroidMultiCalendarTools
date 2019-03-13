@@ -11,7 +11,7 @@ primary color will be your theme color
 </p>
 
 # Add to your project
-copy [this](https://github.com/hooshkar/AndroidMultiCalenderTools/releases/download/1.0.0/uneversaldatetools.aar) to "yourProject/app/libs" <br> [have problem?](https://github.com/hooshkar/AndroidMultiCalenderTools/wiki/install)
+copy [this](https://github.com/hooshkar/AndroidMultiCalenderTools/releases/download/1.5.0/uneversaldatetools-release.aar) to "yourProject/app/libs" <br> [have problem?](https://github.com/hooshkar/AndroidMultiCalenderTools/wiki/install)
 
 # How to use
 <b>date converter:</b> more
