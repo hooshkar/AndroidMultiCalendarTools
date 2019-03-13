@@ -2,7 +2,13 @@
 android date tools and <b>date picker</b> for tree calendar systems <b>Jalali , Hijri , Gregorian</b>
 
 # Screen shots
-todo put screen shots here
+primary color will be your theme color
+<p float="left">
+    <img src= "Images/1.png" height=500 />
+    <img src= "Images/2.png" height=500 />
+    <img src= "Images/3.png" height=500 />
+  
+</p>
 
 # Add to your project
 copy [this](https://github.com/hooshkar/AndroidMultiCalenderTools/releases/download/1.0.0/uneversaldatetools.aar) to "yourProject/app/libs" <br> [have problem?](https://github.com/hooshkar/AndroidMultiCalenderTools/wiki/install)
@@ -18,7 +24,7 @@ DateModel hijri = DateConverter.GregorianToHijri(2018, 1, 1);
 ~~~
 
 <b>date picker:</b> <br>
-xml:
+xml:(don't change height and width)
 ~~~xml
 <com.ali.uneversaldatetools.datePicker.UDatePicker
         android:id="@+id/date_picker"
